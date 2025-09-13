@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
-import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY, selectNode, isNodeSelected, toggleNodeSelected } from '../lib/State'
+import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY, isNodeSelected, toggleNodeSelected } from '../lib/State'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
@@ -9,10 +9,6 @@ const canvas: Ref<HTMLCanvasElement> = ref(null) as any
 let lastMouseX = 0
 let lastMouseY = 0
 let isMouseDown = false
-
-const promptLocationX = ref(0)
-const promptLocationY = ref(0)
-const promptOpenNode = ref(null)
 
 const expandedImage = ref<string | null>(null)
 
