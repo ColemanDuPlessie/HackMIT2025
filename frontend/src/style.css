@@ -9,9 +9,23 @@
   --color-element: #30302E;
   --color-border: #4C4C44;
   --color-accent: #D97656;
+  --color-accent-hover: #F89170;
   --color-accent-button: #ffffff;
   --color-text: #ffffff;
   --color-text-alt: #9C9A92;
+}
+
+* {
+  font-family: Inter;
+  font-weight: 400;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
 }
 
 body {

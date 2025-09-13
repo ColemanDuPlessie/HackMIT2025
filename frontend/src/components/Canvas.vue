@@ -1,43 +1,15 @@
 <script lang="ts" setup>
-import Prompt from './Prompt.vue'
-import { onMounted, ref, type Ref, defineExpose } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
 import { generateImage, modifyImage } from '../lib/OpenAI'
+import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY } from '../lib/State'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
 
-type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
-
-const nodes: Ref<Node[]> = ref([
-    {
-        x: 100,
-        y: 200,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/250px-Image_created_with_a_mobile_phone.png',
-        id: '1',
-        backlinks: [],
-        pointsTo: ['2'],
-    },
-    {
-        x: 500,
-        y: 400,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s',
-        id: '2',
-        backlinks: ['1'],
-        pointsTo: [],
-    },
-])
-const nodeLookup: Record<string, Node> = {
-    '1': nodes.value[0],
-    '2': nodes.value[1],
-}
-
 let lastMouseX = 0
 let lastMouseY = 0
 let isMouseDown = false
-
-const viewOffsetX = ref(0)
-const viewOffsetY = ref(0)
 
 const promptLocationX = ref(0)
 const promptLocationY = ref(0)
@@ -253,7 +225,7 @@ defineExpose({ addNewNode })
             <img v-if="node.image !== null" class="w-full h-full object-cover select-none rounded-xl" :src="node.image" draggable="false" />
         </div>
 
-        <Prompt
+        <!-- <Prompt
             class="absolute w-48 h-10"
             :style="{
                 left: `${viewOffsetX + promptLocationX}px`,
@@ -315,8 +287,8 @@ defineExpose({ addNewNode })
 
 .close-button {
     position: absolute;
-    top: 3rem;
-    left: 4rem;
+    top: 2rem;
+    right: 2rem;
     background: none;
     border: none;
     color: rgb(185, 185, 185);

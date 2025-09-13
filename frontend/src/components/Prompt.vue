@@ -13,13 +13,20 @@ function keydown(event: KeyboardEvent) {
 </script>
 
 <template>
-    <div class="bg-slate-600 border-2 border-slate-400 text-white flex px-2 py-0 overflow-auto rounded">
+    <div class="flex bg-[var(--color-element)] border border-[var(--color-border)] text-[var(--color-text)] flex overflow-auto rounded-xl">
         <input
             type="text"
             v-model="prompt"
-            placeholder="Prompt :D"
-            class="min-w-0 placeholder:text-gray-300 placeholder:italic outline-none border-none"
+            placeholder="Begin with a new idea..."
+            class="min-w-0 placeholder:text-[var(--color-text-alt)] outline-none border-none px-4 py-3 grow h-full"
             @keydown="keydown"
         />
+
+        <button
+            class="bg-[var(--color-accent)] rounded-md flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 ease-in-out"
+            @click="emit('prompt', prompt)"
+        >
+            <span class="material-symbols-outlined text-[var(--color-accent-button)] block"> add </span>
+        </button>
     </div>
 </template>
