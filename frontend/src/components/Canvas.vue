@@ -1,11 +1,11 @@
 <script lang="ts" setup>
-import { onMounted, ref, type Ref, defineExpose } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
 import { generateImage, modifyImage } from '../lib/OpenAI'
 import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY } from '../lib/State'
 
-const container: Ref<HTMLDivElement> = ref(null)
-const canvas: Ref<HTMLCanvasElement> = ref(null)
+const container: Ref<HTMLDivElement> = ref(null) as any
+const canvas: Ref<HTMLCanvasElement> = ref(null) as any
 
 let lastMouseX = 0
 let lastMouseY = 0
@@ -25,11 +25,10 @@ function render() {
     ctx.lineWidth = 1
     ctx.strokeStyle = '#4C4C44'
     ctx.fillStyle = '#4C4C44'
-    let diffX, diffY, diffDist
+    var diffX, diffY, diffDist
     for (const node of nodes.value) {
         for (const connection of node.pointsTo) {
             const otherNode = nodeLookup[connection]
-            if (!otherNode) continue
 
             ctx.beginPath()
             ctx.moveTo(node.x + viewOffsetX.value + 50, node.y + viewOffsetY.value + 50)
@@ -38,17 +37,20 @@ function render() {
 
             diffX = otherNode.x - node.x
             diffY = otherNode.y - node.y
-            diffDist = Math.sqrt(diffX * diffX + diffY * diffY) || 1
+            diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
 
             ctx.beginPath()
+
             ctx.moveTo(
                 node.x + diffX / 2 + viewOffsetX.value + 50 + (diffX * 10) / diffDist,
                 node.y + diffY / 2 + viewOffsetY.value + 50 + (diffY * 10) / diffDist
             )
+
             ctx.lineTo(
                 node.x + diffX / 2 - (diffY * 10) / diffDist + viewOffsetX.value + 50,
                 node.y + diffY / 2 + (diffX * 10) / diffDist + viewOffsetY.value + 50
             )
+
             ctx.lineTo(
                 node.x + diffX * 0.5 + (diffY * 10) / diffDist + viewOffsetX.value + 50,
                 node.y + diffY / 2 - (diffX * 10) / diffDist + viewOffsetY.value + 50
@@ -62,6 +64,7 @@ function render() {
 function mouseDown(event: MouseEvent) {
     lastMouseX = event.clientX
     lastMouseY = event.clientY
+
     isMouseDown = true
 }
 
@@ -98,6 +101,7 @@ const linkedAttractionMultiplier = 3
 function update() {
     const now = Date.now()
     const deltaTime = (now - lastTime) / 1000
+    // const deltaTime = 0.1
     lastTime = now
 
     for (const node of nodes.value) {
@@ -107,7 +111,7 @@ function update() {
         for (const otherNode of nodes.value) {
             if (otherNode.id === node.id) continue
 
-            const distance = Math.sqrt(Math.pow(otherNode.x - node.x, 2) + Math.pow(otherNode.y - node.y, 2)) || 1
+            const distance = Math.sqrt(Math.pow(otherNode.x - node.x, 2) + Math.pow(otherNode.y - node.y, 2))
 
             forceX += ((node.x - otherNode.x) / Math.pow(distance, repulsionPower)) * repulsion
             forceY += ((node.y - otherNode.y) / Math.pow(distance, repulsionPower)) * repulsion
@@ -127,7 +131,9 @@ function update() {
     }
 
     render()
+
     requestAnimationFrame(update)
+    // setTimeout(update, 1000)
 }
 
 onMounted(() => {
@@ -158,7 +164,9 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
     nodeLookup[id] = node
 }
 function openPrompt(node?: Node) {
-    if (!node) return
+    if (!node) {
+        return
+    }
 
     promptLocationX.value = node.x - 192 / 2 + 92.8 / 2
     promptLocationY.value = node.y + 100
@@ -202,7 +210,6 @@ defineExpose({ addNewNode })
 
         <div
             v-for="node in nodes"
-            :key="node.id"
             class="absolute w-24 h-24 border border-[var(--color-border)] bg-[var(--color-element)] rounded-xl"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
@@ -214,7 +221,8 @@ defineExpose({ addNewNode })
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
                 <div class="spinner" />
             </div>
-            <img v-else class="w-full h-full object-cover select-none rounded-xl" :src="node.image" draggable="false" />
+
+            <img v-if="node.image !== null" class="w-full h-full object-cover select-none rounded-xl" :src="node.image" draggable="false" />
         </div>
 
         <!-- <Prompt
