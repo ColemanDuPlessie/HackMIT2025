@@ -158,6 +158,9 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
         return
     }
 
+    // Log the selectedModel from App.vue (assuming it's stored on window.selectedModel)
+    console.log('Selected model in addNewNode:', window.selectedModel);
+
     // image = await generateImage(prompt)
     image = await modifyImage(nodeLookup[backlinks[0]].img, prompt)
 
