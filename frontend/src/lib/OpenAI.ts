@@ -6,7 +6,7 @@ export async function generateImage(prompt?: string) {
             'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_KEY}`
         },
         body: JSON.stringify({
-            model: 'dall-e-3',
+            model: 'gpt-image-1',
             prompt: prompt ?? 'A cute baby sea otter',
             n: 1,
             size: "1024x1024"
