@@ -151,11 +151,31 @@ onMounted(() => {
     update()
 })
 
-async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
-    const image = await generateImage(prompt)
+const fileInput = ref<HTMLInputElement | null>(null)
+
+function triggerFilePicker() {
+    fileInput.value?.click()
+}
+
+function handleFileUpload(event: Event) {
+    const files = (event.target as HTMLInputElement).files
+    if (!files || files.length === 0) return
+
+    const file = files[0]
+    const reader = new FileReader()
+    reader.onload = () => {
+        const imgSrc = reader.result as string
+        // You can customize the prompt/backlinks/location as needed
+        addNewNode('Uploaded Image', [], 300, 300, imgSrc)
+    }
+    reader.readAsDataURL(file)
+}
+
+// Modify addNewNode to accept an optional image src
+async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number, imgSrc?: string) {
+    const image = imgSrc || (await generateImage(prompt))
 
     const id = Math.random().toString()
-
     const node = {
         x: locationX,
         y: locationY,
@@ -164,10 +184,8 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
         backlinks: backlinks,
         pointsTo: [],
     }
-
     nodes.value.push(node)
     nodeLookup[id] = node
-
     for (const backlink of backlinks) {
         nodeLookup[backlink].pointsTo.push(id)
     }
@@ -224,6 +242,13 @@ function openPrompt(node?: Node) {
         <!-- <img  class="w-full h-full"  :src="gridImage" /> -->
 
         <!-- <canvas class="w-full h-full" ref="canvas"></canvas> -->
+        <button
+            @click="triggerFilePicker"
+            class="absolute top-4 right-4 z-10 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition-colors"
+        >
+            Upload Image
+        </button>
+        <input type="file" ref="fileInput" accept="image/*" style="display: none" @change="handleFileUpload" />
     </div>
 </template>
 
