@@ -31,9 +31,6 @@ async function generate() {
             {{ key }}
         </label>
     </div>
-    <h1 class="text-3xl font-bold underline">Hack MIT 2025 Project</h1>
-
-    <button @click="generate">Generate</button>
 
     <div class="flex flex-col w-screen h-screen">
         <div class="flex grow">
