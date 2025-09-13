@@ -3,6 +3,10 @@ import { ref } from 'vue';
 import { generateImage } from './lib/unified_imggen';
 // @ts-ignore: No type definitions for this module
 const MODELS = {"dummy" : "Random Dummy Image", "dall-e-3" : "dall-E 3", "dall-e-2" : "dall-E 2", "stable-diffusion-xl-1.0" : "Stable Diffusion XL 1.0"}
+import Canvas from './components/Canvas.vue'
+
+import { ref } from 'vue'
+import { generateImage } from './lib/OpenAI'
 
 const imageSrc = ref('null')
 
@@ -39,8 +43,11 @@ async function generate() {
   <div class="grow-4 bg-red"></div>
   <div class="grow-1 bg-blue"></div>
  </div>
+    <div class="flex flex-col w-screen h-screen">
+        <div class="flex grow">
+            <Canvas class="grow" />
+        </div>
+    </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
