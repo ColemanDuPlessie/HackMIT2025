@@ -15,6 +15,7 @@ const imageSrc = ref('null')
 const selectedModel = ref('dummy')
 const showMenu = ref(false)
 const showInstructions = ref(false)
+const canvasRef = ref()
 
 window.selectedModel = selectedModel.value;
 watch(selectedModel, (val) => {
@@ -39,10 +40,28 @@ function openInstructions() {
 function closeInstructions() {
   showInstructions.value = false
 }
+
+function triggerFilePicker() {
+  document.getElementById('navbarFileInput')?.click()
+}
+
+function handleFileUpload(event: Event) {
+  const files = (event.target as HTMLInputElement).files
+  if (!files || files.length === 0) return
+
+  const file = files[0]
+  const reader = new FileReader()
+  reader.onload = () => {
+    const imgSrc = reader.result as string
+    // Add as a separate node (no backlinks)
+    canvasRef.value?.addNewNode?.('Uploaded Image', [], 300, 300, imgSrc)
+  }
+  reader.readAsDataURL(file)
+}
 </script>
 
 <template>
-  <div class="mb-4 flex gap-4 sticky-model-row">
+  <div class="mb-4 flex gap-4 sticky-model-row items-center">
     <label
       v-for="(key, name) in MODELS"
       :key="name"
@@ -50,11 +69,26 @@ function closeInstructions() {
       <input type="radio" :value="name" v-model="selectedModel" class="modelSelector" />
       <span>{{ key }}</span>
     </label>
+    <!-- Upload button styled to match other buttons -->
+    <button
+      @click="triggerFilePicker"
+      class="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow transition-colors"
+    >
+      Upload Image
+    </button>
+    <input
+      id="navbarFileInput"
+      type="file"
+      accept="image/*"
+      style="display: none"
+      @change="handleFileUpload"
+    />
   </div>
 
   <div class="flex flex-col w-screen h-screen">
     <div class="flex grow">
-      <Canvas class="grow" />
+      <!-- Bind ref to Canvas to call addNewNode -->
+      <Canvas class="grow" ref="canvasRef" />
     </div>
   </div>
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import Prompt from './Prompt.vue'
-import { onMounted, ref, type Ref } from 'vue'
+import { onMounted, ref, type Ref, defineExpose } from 'vue'
 import gridImage from '../assets/grid.png'
 import { generateImage, modifyImage } from '../lib/OpenAI'
 
@@ -174,37 +174,20 @@ onMounted(() => {
     update()
 })
 
-async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
-    let image = null
-
-    if (backlinks.length === 0) {
-        return
-    }
-
-    // Log the selectedModel from App.vue (assuming it's stored on window.selectedModel)
-    console.log('Selected model in addNewNode:', window.selectedModel)
-
-    // image = await generateImage(prompt)
-
+async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number, imgSrc?: string) {
+    const image = imgSrc || (await generateImage(prompt))
     const id = Math.random().toString()
     const node = {
         x: locationX,
         y: locationY,
-        image: null,
+        image, // or img if your type uses img
         id,
-        backlinks: backlinks,
+        backlinks,
         pointsTo: [],
     }
-
     nodes.value.push(node)
     nodeLookup[id] = node
-    for (const backlink of backlinks) {
-        nodeLookup[backlink].pointsTo.push(id)
-    }
-
-    node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
 }
-
 function openPrompt(node?: Node) {
     if (!node) {
         return
@@ -214,6 +197,8 @@ function openPrompt(node?: Node) {
     promptLocationY.value = node.y + 100
     promptOpenNode.value = node
 }
+
+defineExpose({ addNewNode })
 </script>
 
 <template>
