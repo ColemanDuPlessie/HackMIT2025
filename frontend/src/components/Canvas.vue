@@ -1,11 +1,13 @@
 <script lang="ts" setup>
+import Prompt from './Prompt.vue'
 import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
+import { generateImage } from '../lib/OpenAI'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
 
-const nodes: { x: number; y: number; img: string }[] = [
+const nodes: Ref<{ x: number; y: number; img: string }[]> = ref([
     {
         x: 100,
         y: 200,
@@ -16,7 +18,7 @@ const nodes: { x: number; y: number; img: string }[] = [
         y: 400,
         img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s',
     },
-]
+])
 
 let lastMouseX = 0
 let lastMouseY = 0
@@ -60,6 +62,16 @@ onMounted(() => {
     //     canvas.value.height = height
     // }).observe(container.value)
 })
+
+async function addNewNode(prompt: string) {
+    const image = await generateImage(prompt)
+
+    nodes.value.push({
+        x: Math.random() * 600,
+        y: Math.random() * 600,
+        img: image,
+    })
+}
 </script>
 
 <template>
@@ -85,8 +97,17 @@ onMounted(() => {
                 top: `${viewOffsetY + node.y}px`,
             }"
         >
-            <img class="w-full h-full object-cover select-none" :src="node.img" draggable="false" />
+            <img class="w-full h-full object-cover select-none rounded" :src="node.img" draggable="false" />
         </div>
+
+        <Prompt
+            class="absolute w-48 h-10"
+            :style="{
+                left: `${viewOffsetX}px`,
+                top: `${viewOffsetY}px`,
+            }"
+            @prompt="addNewNode"
+        />
         <!-- <img  class="w-full h-full"  :src="gridImage" /> -->
 
         <!-- <canvas class="w-full h-full" ref="canvas"></canvas> -->
