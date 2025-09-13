@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import Canvas from './components/Canvas.vue'
-
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { generateImage } from './lib/unified_imggen'
+
+// Global type augmentation to include selectedModel in window
+declare global {
+  interface Window {
+    selectedModel: string;
+  }
+}
+
 // @ts-ignore: No type definitions for this module
 const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0' }
 
@@ -10,6 +17,13 @@ const imageSrc = ref('null')
 
 const selectedModel = ref('dummy')
 
+// Expose selectedModel globally so that it can be accessed from other components
+window.selectedModel = selectedModel.value;
+watch(selectedModel, (val) => {
+  window.selectedModel = val;
+});
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function generate() {
     var output: string | Response | undefined = await generateImage(selectedModel.value, 'A robot talking to a puppy')
     console.log('Generated image URL:', output)

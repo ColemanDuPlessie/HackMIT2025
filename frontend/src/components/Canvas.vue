@@ -56,8 +56,8 @@ function render() {
             const otherNode = nodeLookup[connection]
 
             ctx.beginPath()
-            ctx.moveTo(node.x + viewOffsetX.value, node.y + viewOffsetY.value)
-            ctx.lineTo(otherNode.x + viewOffsetX.value, otherNode.y + viewOffsetY.value)
+            ctx.moveTo(node.x + viewOffsetX.value+50, node.y + viewOffsetY.value+50)
+            ctx.lineTo(otherNode.x + viewOffsetX.value+50, otherNode.y + viewOffsetY.value+50)
             ctx.stroke()
         }
     }
@@ -157,6 +157,9 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
     if (backlinks.length === 0) {
         return
     }
+
+    // Log the selectedModel from App.vue (assuming it's stored on window.selectedModel)
+    console.log('Selected model in addNewNode:', window.selectedModel);
 
     // image = await generateImage(prompt)
     image = await modifyImage(nodeLookup[backlinks[0]].img, prompt)
