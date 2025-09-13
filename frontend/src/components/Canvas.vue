@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
-import { generateImage, modifyImage } from '../lib/OpenAI'
 import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY } from '../lib/State'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
@@ -86,7 +85,7 @@ function mouseMove(event: MouseEvent) {
     render()
 }
 
-function mouseUp(_event: MouseEvent) {
+function mouseUp(event: MouseEvent) {
     isMouseDown = false
 }
 
@@ -149,29 +148,6 @@ onMounted(() => {
     update()
 })
 
-async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number, imgSrc?: string) {
-    const image = imgSrc || (await generateImage(prompt))
-    const id = Math.random().toString()
-    const node = {
-        x: locationX,
-        y: locationY,
-        image, // or img if your type uses img
-        id,
-        backlinks,
-        pointsTo: [],
-    }
-    nodes.value.push(node)
-    nodeLookup[id] = node
-}
-function openPrompt(node?: Node) {
-    if (!node) {
-        return
-    }
-
-    promptLocationX.value = node.x - 192 / 2 + 92.8 / 2
-    promptLocationY.value = node.y + 100
-    promptOpenNode.value = node
-}
 function openBig(node?: Node) {
     if (!node) {
         return
@@ -187,8 +163,6 @@ function openBig(node?: Node) {
 function closeExpanded() {
     expandedImage.value = null
 }
-
-defineExpose({ addNewNode })
 </script>
 
 <template>
@@ -215,7 +189,6 @@ defineExpose({ addNewNode })
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
-            @click="openPrompt(node)"
             @dblclick="openBig(node)"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
@@ -236,8 +209,8 @@ defineExpose({ addNewNode })
 
         <!-- Expanded Image Modal -->
         <div v-if="expandedImage" class="modal-overlay" @click.self="closeExpanded">
-          <button class="close-button" @click="closeExpanded">X</button>
-          <img :src="expandedImage" class="modal-image" />
+            <button class="close-button" @click="closeExpanded">X</button>
+            <img :src="expandedImage" class="modal-image" />
         </div>
         <!-- End Expanded Image Modal -->
     </div>
