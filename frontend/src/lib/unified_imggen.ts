@@ -8,7 +8,7 @@ export async function generateImage(model="dummy", prompt: string) {
    console.log("Generating image with model:", model, "and prompt:", prompt);
    if (model == "dummy") {
     return 'https://ideas.darden.virginia.edu/sites/default/files/styles/full_width_1024px_5_3_/public/2024-09/AI%20ART%20ITA.jpg?itok=CIaF2iIX'
-   } else if (model == "dall-e-3" || model == "dall-e-2") {
+   } else if (model == "dall-e-3" || model == "dall-e-2" || model == "gpt-image-1") {
         console.log("Using OpenAI API for image generation");
         const response = await fetch('https://api.openai.com/v1/images/generations', {
             method: 'POST',
@@ -25,7 +25,7 @@ export async function generateImage(model="dummy", prompt: string) {
         });
         const result = await response.json();
         return result.data[0].url;
-   } else if (model == "stable-diffusion-xl-1.0" || model == "stable-diffusion-2") {
+   } else if (model == "stable-diffusion-xl-1.0" || model == "stable-diffusion-2" || model == "instruct-pix2pix") {
         const hf = new InferenceClient(import.meta.env.VITE_HUGGING_KEY);
         console.log("Using HuggingFace API for image generation");
         const blob:string = await hf.textToImage({

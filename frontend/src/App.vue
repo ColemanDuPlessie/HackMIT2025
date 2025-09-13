@@ -12,7 +12,7 @@ declare global {
 }
 
 // Add instruct-pix2pix to the models list
-const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0', 'instruct-pix2pix': 'InstructPix2Pix' }
+const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'DALL-E 3', 'dall-e-2': 'DALL-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0', 'instruct-pix2pix': 'InstructPix2Pix', 'gpt-img-1': 'GPT 4o Image Generation' }
 const imageSrc = ref('null')
 const selectedModel = ref('dummy')
 const showMenu = ref(false)
