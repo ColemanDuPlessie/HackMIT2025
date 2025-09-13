@@ -3,6 +3,7 @@ import Prompt from './components/Prompt.vue'
 import Canvas from './components/Canvas.vue'
 import { ref, watch } from 'vue'
 import { generateImage } from './lib/unified_imggen'
+import { addNewNode } from './lib/State'
 
 // Global type augmentation to include selectedModel in window
 declare global {
@@ -22,23 +23,16 @@ watch(selectedModel, val => {
     window.selectedModel = val
 })
 
-async function generate() {
-    var output: string | Response | undefined = await generateImage(selectedModel.value, 'A robot talking to a puppy')
-    console.log('Generated image URL:', output)
-    if (output instanceof Response) {
-        output = output['url']
-    } else if (output === undefined) {
-        output = 'https://ideas.darden.virginia.edu/sites/default/files/styles/full_width_1024px_5_3_/public/2024-09/AI%20ART%20ITA.jpg?itok=CIaF2iIX'
-    }
-    imageSrc.value = output as string
-}
-
 function openInstructions() {
     showInstructions.value = true
     showMenu.value = false
 }
 function closeInstructions() {
     showInstructions.value = false
+}
+
+function prompt(prompt: string) {
+    addNewNode(prompt, [], 0, 0)
 }
 </script>
 
@@ -50,7 +44,7 @@ function closeInstructions() {
     </div>
 
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
-        <Prompt class="grow" />
+        <Prompt class="grow" @prompt="prompt" />
     </div>
 
     <!-- Hamburger Menu -->

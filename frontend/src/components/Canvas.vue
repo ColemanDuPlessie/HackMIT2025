@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
-import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY } from '../lib/State'
+import { type Node, nodes, nodeLookup, viewOffsetX, viewOffsetY, selectNode, isNodeSelected, toggleNodeSelected } from '../lib/State'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
@@ -184,11 +184,16 @@ function closeExpanded() {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 border border-[var(--color-border)] bg-[var(--color-element)] rounded-xl"
+            class="absolute w-24 h-24 border bg-[var(--color-element)] rounded-xl transition-[border scale] duration-100 ease-in-out"
+            :class="{
+                'border-[var(--color-border)]': !isNodeSelected(node),
+                'border-[var(--color-accent)] scale-105': isNodeSelected(node),
+            }"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
+            @click="toggleNodeSelected(node)"
             @dblclick="openBig(node)"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">

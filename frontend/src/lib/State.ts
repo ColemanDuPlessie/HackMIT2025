@@ -1,4 +1,4 @@
-import { ref, type Ref } from 'vue'
+import { onMounted, ref, type Ref } from 'vue'
 import { modifyImage } from './OpenAI';
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
@@ -25,6 +25,34 @@ export const nodes: Ref<Node[]> = ref([
 export const nodeLookup: Record<string, Node> = {
     '1': nodes.value[0],
     '2': nodes.value[1],
+}
+
+export const selectedNodes: Ref<Node[]> = ref([])
+
+export function isNodeSelected(node: Node) {
+    return selectedNodes.value.find(otherNode => otherNode.id === node.id) !== undefined
+}
+
+export function selectNode(node: Node) {
+    if(isNodeSelected(node)) return
+
+    selectedNodes.value.push(node)
+    selectedNodes.value = [...selectedNodes.value]
+}
+
+export function deselectNode(node: Node) {
+    if(!isNodeSelected(node)) return
+
+    selectedNodes.value.splice(selectedNodes.value.findIndex(otherNode => otherNode.id === node.id), 1)
+    selectedNodes.value = [...selectedNodes.value]
+}
+
+export function toggleNodeSelected(node: Node) {
+    if(isNodeSelected(node)) {
+        deselectNode(node)
+    } else {
+        selectNode(node)
+    }
 }
 
 export async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
