@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Generate Image</title>
+</head>
+<body>
+	<button id="genBtn">Generate Image</button>
+	<script type="module">
+		import { genImg } from './gen_imgs.js';
+		document.getElementById('genBtn').addEventListener('click', genImg);
+	</script>
+    <img id="outputImg" src="" alt="Generated image will go here!"/>
+</body>
+</html>
