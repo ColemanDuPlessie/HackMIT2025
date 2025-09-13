@@ -1,4 +1,3 @@
-import { KEY } from "./API_KEYS.js";
 import { InferenceClient } from '@huggingface/inference';
 
 
@@ -27,7 +26,7 @@ export async function generateImage(model="dummy", prompt: string) {
         const result = await response.json();
         return result.data[0].url;
    } else if (model == "stable-diffusion-xl-1.0" || model == "stable-diffusion-2") {
-        const hf = new InferenceClient(KEY);
+        const hf = new InferenceClient(import.meta.env.HF_KEY);
         console.log("Using HuggingFace API for image generation");
         const blob:string = await hf.textToImage({
         inputs:
