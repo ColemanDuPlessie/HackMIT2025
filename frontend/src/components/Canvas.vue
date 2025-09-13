@@ -69,8 +69,10 @@ function render() {
             diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
 
             ctx.beginPath()
-            ctx.moveTo(node.x + viewOffsetX.value+50, node.y + viewOffsetY.value+50)
-            ctx.lineTo(otherNode.x + viewOffsetX.value+50, otherNode.y + viewOffsetY.value+50)
+            ctx.moveTo(node.x+diffX/2+viewOffsetX.value+50+diffX*20/diffDist, node.y+diffY/2+viewOffsetY.value+50+diffY*20/diffDist)
+            ctx.lineTo(node.x+diffX/2-diffY*20/diffDist+viewOffsetX.value+50, node.y+diffY/2+diffX*20/diffDist+viewOffsetY.value+50)
+            ctx.lineTo(node.x+diffX*0.5+diffY*20/diffDist+viewOffsetX.value+50, node.y+diffY/2-diffX*20/diffDist+viewOffsetY.value+50)
+            ctx.closePath()
             ctx.stroke()
 
         }
