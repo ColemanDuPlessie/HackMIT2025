@@ -43,6 +43,8 @@ const promptLocationX = ref(0)
 const promptLocationY = ref(0)
 const promptOpenNode = ref(null)
 
+const expandedImage = ref<string | null>(null)
+
 function render() {
     const ctx = canvas.value.getContext('2d')
 
@@ -112,7 +114,7 @@ function mouseMove(event: MouseEvent) {
     render()
 }
 
-function mouseUp(event: MouseEvent) {
+function mouseUp(_event: MouseEvent) {
     isMouseDown = false
 }
 
@@ -198,6 +200,21 @@ function openPrompt(node?: Node) {
     promptLocationY.value = node.y + 100
     promptOpenNode.value = node
 }
+function openBig(node?: Node) {
+    if (!node) {
+        return
+    }
+
+    const img = node.image
+    if (!img) {
+        return
+    }
+    expandedImage.value = img
+}
+
+function closeExpanded() {
+    expandedImage.value = null
+}
 
 defineExpose({ addNewNode })
 </script>
@@ -227,6 +244,7 @@ defineExpose({ addNewNode })
                 top: `${viewOffsetY + node.y}px`,
             }"
             @click="openPrompt(node)"
+            @dblclick="openBig(node)"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
                 <div class="spinner" />
@@ -243,6 +261,13 @@ defineExpose({ addNewNode })
             }"
             @prompt="prompt => addNewNode(prompt, [promptOpenNode.id], promptOpenNode.x + Math.random() * 100, promptOpenNode.y + Math.random() * 100)"
         />
+
+        <!-- Expanded Image Modal -->
+        <div v-if="expandedImage" class="modal-overlay" @click.self="closeExpanded">
+          <button class="close-button" @click="closeExpanded">X</button>
+          <img :src="expandedImage" class="modal-image" />
+        </div>
+        <!-- End Expanded Image Modal -->
     </div>
 </template>
 
@@ -273,5 +298,35 @@ defineExpose({ addNewNode })
     100% {
         transform: rotate(450deg);
     }
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.close-button {
+    position: absolute;
+    top: 3rem;
+    left: 4rem;
+    background: none;
+    border: none;
+    color: rgb(185, 185, 185);
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    border-radius: 0.5rem;
 }
 </style>
