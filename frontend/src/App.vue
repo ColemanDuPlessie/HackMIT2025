@@ -11,7 +11,7 @@ declare global {
 }
 
 // @ts-ignore: No type definitions for this module
-const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0' }
+const MODELS = { 'dummy': 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0' }
 
 const imageSrc = ref('null')
 
