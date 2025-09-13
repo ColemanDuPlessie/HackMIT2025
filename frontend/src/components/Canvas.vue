@@ -46,8 +46,6 @@ const promptOpenNode = ref(null)
 function render() {
     const ctx = canvas.value.getContext('2d')
 
-    console.log(canvas.value.width)
-
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
     ctx.lineWidth = 4
@@ -94,10 +92,50 @@ function mouseUp(event: MouseEvent) {
     isMouseDown = false
 }
 
+let lastTime = Date.now()
+
+const repulsion = 10000
+const repulsionPower = 2
+const attraction = 2 / 10000
+const attractionPower = 1
+const linkedAttractionMultiplier = 3
+
 function update() {
+    const now = Date.now()
+    const deltaTime = (now - lastTime) / 1000
+    // const deltaTime = 0.1
+    lastTime = now
+
+    for (const node of nodes.value) {
+        let forceX = 0
+        let forceY = 0
+
+        for (const otherNode of nodes.value) {
+            if (otherNode.id === node.id) continue
+
+            const distance = Math.sqrt(Math.pow(otherNode.x - node.x, 2) + Math.pow(otherNode.y - node.y, 2))
+
+            forceX += ((node.x - otherNode.x) / Math.pow(distance, repulsionPower)) * repulsion
+            forceY += ((node.y - otherNode.y) / Math.pow(distance, repulsionPower)) * repulsion
+
+            forceX +=
+                -((node.x - otherNode.x) * Math.pow(distance, attractionPower)) *
+                attraction *
+                (node.backlinks.includes(otherNode.id) || node.pointsTo.includes(otherNode.id) ? linkedAttractionMultiplier : 1)
+            forceY +=
+                -((node.y - otherNode.y) * Math.pow(distance, attractionPower)) *
+                attraction *
+                (node.backlinks.includes(otherNode.id) || node.pointsTo.includes(otherNode.id) ? linkedAttractionMultiplier : 1)
+        }
+
+        node.x += forceX * deltaTime
+        node.y += forceY * deltaTime
+    }
+
     render()
 
     requestAnimationFrame(update)
+    // setTimeout(update, 1000)
 }
 
 onMounted(() => {
@@ -113,14 +151,14 @@ onMounted(() => {
     update()
 })
 
-async function addNewNode(prompt: string, backlinks: string[]) {
+async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
     const image = await generateImage(prompt)
 
     const id = Math.random().toString()
 
     const node = {
-        x: Math.random() * 600,
-        y: Math.random() * 600,
+        x: locationX,
+        y: locationY,
         img: image,
         id,
         backlinks: backlinks,
@@ -161,7 +199,7 @@ function openPrompt(node?: Node) {
             @mouseup="mouseUp"
         ></div>
 
-        <canvas class="absolute top-0 left-0 w-full h-full bg-amber-700/20 pointer-events-none" ref="canvas" />
+        <canvas class="absolute top-0 left-0 w-full h-full pointer-events-none" ref="canvas" />
 
         <div
             v-for="node in nodes"
@@ -181,7 +219,7 @@ function openPrompt(node?: Node) {
                 left: `${viewOffsetX + promptLocationX}px`,
                 top: `${viewOffsetY + promptLocationY}px`,
             }"
-            @prompt="prompt => addNewNode(prompt, [promptOpenNode.id])"
+            @prompt="prompt => addNewNode(prompt, [promptOpenNode.id], promptOpenNode.x + Math.random() * 100, promptOpenNode.y + Math.random() * 100)"
         />
         <!-- <img  class="w-full h-full"  :src="gridImage" /> -->
 
