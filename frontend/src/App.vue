@@ -1,12 +1,10 @@
 <script setup lang="ts">
+import Canvas from './components/Canvas.vue'
+
 import { ref } from 'vue';
 import { generateImage } from './lib/unified_imggen';
 // @ts-ignore: No type definitions for this module
 const MODELS = {"dummy" : "Random Dummy Image", "dall-e-3" : "dall-E 3", "dall-e-2" : "dall-E 2", "stable-diffusion-xl-1.0" : "Stable Diffusion XL 1.0"}
-import Canvas from './components/Canvas.vue'
-
-import { ref } from 'vue'
-import { generateImage } from './lib/OpenAI'
 
 const imageSrc = ref('null')
 
