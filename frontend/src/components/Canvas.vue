@@ -39,6 +39,10 @@ let isMouseDown = false
 const viewOffsetX = ref(0)
 const viewOffsetY = ref(0)
 
+const promptLocationX = ref(0)
+const promptLocationY = ref(0)
+const promptOpenNode = ref(null)
+
 function render() {
     const ctx = canvas.value.getContext('2d')
 
@@ -90,6 +94,12 @@ function mouseUp(event: MouseEvent) {
     isMouseDown = false
 }
 
+function update() {
+    render()
+
+    requestAnimationFrame(update)
+}
+
 onMounted(() => {
     new ResizeObserver(() => {
         const width = container.value.offsetWidth
@@ -99,6 +109,8 @@ onMounted(() => {
 
         render()
     }).observe(container.value)
+
+    update()
 })
 
 async function addNewNode(prompt: string, backlinks: string[]) {
@@ -122,6 +134,16 @@ async function addNewNode(prompt: string, backlinks: string[]) {
         nodeLookup[backlink].pointsTo.push(id)
     }
 }
+
+function openPrompt(node?: Node) {
+    if (!node) {
+        return
+    }
+
+    promptLocationX.value = node.x - 192 / 2 + 92.8 / 2
+    promptLocationY.value = node.y + 100
+    promptOpenNode.value = node
+}
 </script>
 
 <template>
@@ -143,11 +165,12 @@ async function addNewNode(prompt: string, backlinks: string[]) {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 border-2 border-slate-400 rounded hover:scale-110"
+            class="absolute w-24 h-24 border-2 border-slate-400 rounded"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
+            @click="openPrompt(node)"
         >
             <img class="w-full h-full object-cover select-none rounded" :src="node.img" draggable="false" />
         </div>
@@ -155,10 +178,10 @@ async function addNewNode(prompt: string, backlinks: string[]) {
         <Prompt
             class="absolute w-48 h-10"
             :style="{
-                left: `${viewOffsetX}px`,
-                top: `${viewOffsetY}px`,
+                left: `${viewOffsetX + promptLocationX}px`,
+                top: `${viewOffsetY + promptLocationY}px`,
             }"
-            @prompt="addNewNode"
+            @prompt="prompt => addNewNode(prompt, [promptOpenNode.id])"
         />
         <!-- <img  class="w-full h-full"  :src="gridImage" /> -->
 
