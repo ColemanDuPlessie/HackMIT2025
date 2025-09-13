@@ -13,7 +13,7 @@ function keydown(event: KeyboardEvent) {
 </script>
 
 <template>
-    <div class="flex bg-[var(--color-element)] border border-[var(--color-border)] text-[var(--color-text)] flex overflow-auto rounded-xl">
+    <div class="flex bg-[var(--color-element)] border border-[var(--color-border)] text-[var(--color-text)] overflow-auto rounded-xl">
         <input
             type="text"
             v-model="prompt"
