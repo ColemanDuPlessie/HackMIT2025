@@ -189,7 +189,7 @@ function openPrompt(node?: Node) {
 </script>
 
 <template>
-    <div class="bg-slate-800 overflow-hidden" ref="container">
+    <div class="bg-[var(--color-background)] overflow-hidden" ref="container">
         <div
             class="relative grid"
             :style="{
