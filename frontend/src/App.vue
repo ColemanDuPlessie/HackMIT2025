@@ -25,10 +25,13 @@ async function generate() {
 </script>
 
 <template>
-    <div class="mb-4 flex gap-4">
-        <label v-for="(key, name) in MODELS" :key="name">
-            <input type="radio" :value="name" v-model="selectedModel" />
-            {{ key }}
+    <div class="mb-4 flex gap-4 sticky-model-row">
+        <label
+        v-for="(key, name) in MODELS"
+        :key="name"
+        :class="{ selected: selectedModel === name }">
+        <input type="radio" :value="name" v-model="selectedModel" class="modelSelector" />
+        <span>{{ key }}</span>
         </label>
     </div>
 
