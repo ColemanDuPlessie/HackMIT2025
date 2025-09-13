@@ -48,6 +48,9 @@ function render() {
 
     ctx.clearRect(0, 0, canvas.value.width, canvas.value.height)
 
+    ctx.lineWidth = 1
+    ctx.strokeStyle = '#4C4C44'
+    var diffX, diffY, diffDist
     for (const node of nodes.value) {
         for (const connection of node.pointsTo) {
             const otherNode = nodeLookup[connection]
@@ -57,20 +60,19 @@ function render() {
             ctx.strokeStyle = 'pink'
 
             ctx.beginPath()
+            ctx.moveTo(node.x + viewOffsetX.value + 50, node.y + viewOffsetY.value + 50)
+            ctx.lineTo(otherNode.x + viewOffsetX.value + 50, otherNode.y + viewOffsetY.value + 50)
+            ctx.stroke()
+
+            diffX = otherNode.x - node.x
+            diffY = otherNode.y - node.y
+            diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
+
+            ctx.beginPath()
             ctx.moveTo(node.x + viewOffsetX.value+50, node.y + viewOffsetY.value+50)
             ctx.lineTo(otherNode.x + viewOffsetX.value+50, otherNode.y + viewOffsetY.value+50)
             ctx.stroke()
 
-            const diffX = otherNode.x - node.x
-            const diffY = otherNode.y - node.y
-            const diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
-
-            ctx.beginPath()
-            ctx.moveTo(node.x+diffX/2+viewOffsetX.value+50+diffX*20/diffDist, node.y+diffY/2+viewOffsetY.value+50+diffY*20/diffDist)
-            ctx.lineTo(node.x+diffX/2-diffY*20/diffDist+viewOffsetX.value+50, node.y+diffY/2+diffX*20/diffDist+viewOffsetY.value+50)
-            ctx.lineTo(node.x+diffX*0.5+diffY*20/diffDist+viewOffsetX.value+50, node.y+diffY/2-diffX*20/diffDist+viewOffsetY.value+50)
-            ctx.closePath()
-            ctx.stroke()
         }
     }
 }
@@ -171,7 +173,7 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
     }
 
     // Log the selectedModel from App.vue (assuming it's stored on window.selectedModel)
-    console.log('Selected model in addNewNode:', window.selectedModel);
+    console.log('Selected model in addNewNode:', window.selectedModel)
 
     // image = await generateImage(prompt)
     image = await modifyImage(nodeLookup[backlinks[0]].img, prompt)
@@ -208,7 +210,7 @@ function openPrompt(node?: Node) {
         <div
             class="relative grid"
             :style="{
-                'background-image': `url(${gridImage})`,
+                background: `url(${gridImage})`,
                 'image-rendering': 'crisp-edges',
                 left: `${(viewOffsetX % 24) - 24}px`,
                 top: `${(viewOffsetY % 24) - 24}px`,
@@ -222,14 +224,14 @@ function openPrompt(node?: Node) {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 border-2 border-slate-400 rounded"
+            class="absolute w-24 h-24 border border-[var(--color-border)] rounded-xl"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
             @click="openPrompt(node)"
         >
-            <img class="w-full h-full object-cover select-none rounded" :src="node.img" draggable="false" />
+            <img class="w-full h-full object-cover select-none rounded-xl" :src="node.img" draggable="false" />
         </div>
 
         <Prompt
