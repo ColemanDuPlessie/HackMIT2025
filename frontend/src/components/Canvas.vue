@@ -2,7 +2,7 @@
 import Prompt from './Prompt.vue'
 import { onMounted, ref, type Ref } from 'vue'
 import gridImage from '../assets/grid.png'
-import { generateImage } from '../lib/OpenAI'
+import { generateImage, modifyImage } from '../lib/OpenAI'
 
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
@@ -151,29 +151,15 @@ onMounted(() => {
     update()
 })
 
-const fileInput = ref<HTMLInputElement | null>(null)
+async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
+    let image = null
 
-function triggerFilePicker() {
-    fileInput.value?.click()
-}
-
-function handleFileUpload(event: Event) {
-    const files = (event.target as HTMLInputElement).files
-    if (!files || files.length === 0) return
-
-    const file = files[0]
-    const reader = new FileReader()
-    reader.onload = () => {
-        const imgSrc = reader.result as string
-        // You can customize the prompt/backlinks/location as needed
-        addNewNode('Uploaded Image', [], 300, 300, imgSrc)
+    if (backlinks.length === 0) {
+        return
     }
-    reader.readAsDataURL(file)
-}
 
-// Modify addNewNode to accept an optional image src
-async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number, imgSrc?: string) {
-    const image = imgSrc || (await generateImage(prompt))
+    // image = await generateImage(prompt)
+    image = await modifyImage(nodeLookup[backlinks[0]].img, prompt)
 
     const id = Math.random().toString()
     const node = {
@@ -239,16 +225,6 @@ function openPrompt(node?: Node) {
             }"
             @prompt="prompt => addNewNode(prompt, [promptOpenNode.id], promptOpenNode.x + Math.random() * 100, promptOpenNode.y + Math.random() * 100)"
         />
-        <!-- <img  class="w-full h-full"  :src="gridImage" /> -->
-
-        <!-- <canvas class="w-full h-full" ref="canvas"></canvas> -->
-        <button
-            @click="triggerFilePicker"
-            class="absolute top-4 right-4 z-10 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition-colors"
-        >
-            Upload Image
-        </button>
-        <input type="file" ref="fileInput" accept="image/*" style="display: none" @change="handleFileUpload" />
     </div>
 </template>
 
