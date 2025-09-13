@@ -1,30 +1,27 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue';
+import { generateImage } from './lib/OpenAI';
+
+const imageSrc = ref('null')
+
+async function generate() {
+    imageSrc.value = await generateImage()
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+ <h1 class="text-3xl font-bold underline">Hack MIT 2025 Project</h1>
+
+    <button @click="generate">Generate</button>
+
+    <img :src="imageSrc" />
+
+ <div class="flex">
+  <div class="grow-4 bg-red"></div>
+  <div class="grow-1 bg-blue"></div>
+ </div>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+
 </style>
