@@ -1,5 +1,5 @@
 import { onMounted, ref, type Ref } from 'vue'
-import { modifyImage } from './OpenAI';
+import { generateImage, modifyImage } from './OpenAI';
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
 
@@ -56,13 +56,6 @@ export function toggleNodeSelected(node: Node) {
 }
 
 export async function addNewNode(prompt: string, backlinks: string[], locationX: number, locationY: number) {
-    if (backlinks.length === 0) {
-        return
-    }
-
-    // Log the selectedModel from App.vue (assuming it's stored on window.selectedModel)    // console.log('Selected model in addNewNode:', window.selectedModel)
-    // image = await generateImage(prompt)
-
     const id = Math.random().toString()
     const node = {
         x: locationX,
@@ -77,6 +70,12 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     nodeLookup[id] = node
     for (const backlink of backlinks) {
         nodeLookup[backlink].pointsTo.push(id)
+    }
+
+    if (backlinks.length === 0) {
+        node.image = await generateImage(prompt)
+        
+        return
     }
 
     node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)

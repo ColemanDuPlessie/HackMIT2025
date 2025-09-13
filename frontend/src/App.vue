@@ -2,8 +2,7 @@
 import Prompt from './components/Prompt.vue'
 import Canvas from './components/Canvas.vue'
 import { ref, watch } from 'vue'
-import { generateImage } from './lib/unified_imggen'
-import { addNewNode } from './lib/State'
+import { addNewNode, selectedNodes, viewOffsetX, viewOffsetY } from './lib/State'
 
 // Global type augmentation to include selectedModel in window
 declare global {
@@ -13,7 +12,6 @@ declare global {
 }
 
 const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0' }
-const imageSrc = ref('null')
 const selectedModel = ref('dummy')
 const showMenu = ref(false)
 const showInstructions = ref(false)
@@ -32,7 +30,18 @@ function closeInstructions() {
 }
 
 function prompt(prompt: string) {
-    addNewNode(prompt, [], 0, 0)
+    if (selectedNodes.value.length === 0) {
+        addNewNode(prompt, [], viewOffsetX.value, viewOffsetY.value)
+    } else if (selectedNodes.value.length === 1) {
+        addNewNode(prompt, [selectedNodes.value[0].id], selectedNodes.value[0].x + Math.random() * 100, selectedNodes.value[0].y + Math.random() * 100)
+    } else if (selectedNodes.value.length > 1) {
+        addNewNode(
+            prompt,
+            selectedNodes.value.map(node => node.id),
+            selectedNodes.value[0].x + Math.random() * 100,
+            selectedNodes.value[0].y + Math.random() * 100
+        )
+    }
 }
 </script>
 

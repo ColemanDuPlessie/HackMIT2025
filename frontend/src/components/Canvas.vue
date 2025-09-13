@@ -180,7 +180,7 @@ function closeExpanded() {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 border bg-[var(--color-element)] rounded-xl transition-[border scale] duration-100 ease-in-out"
+            class="absolute w-24 h-24 border bg-[var(--color-element)] rounded-xl transition-[border] duration-100 ease-in-out"
             :class="{
                 'border-[var(--color-border)]': !isNodeSelected(node),
                 'border-[var(--color-accent)] scale-105': isNodeSelected(node),
@@ -189,8 +189,7 @@ function closeExpanded() {
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
-            @click="toggleNodeSelected(node)"
-            @dblclick="openBig(node)"
+            @click="node.image !== null ? toggleNodeSelected(node) : undefined"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
                 <div class="spinner" />

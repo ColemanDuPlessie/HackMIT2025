@@ -1,5 +1,7 @@
 export async function generateImage(prompt?: string) {
-    // return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
+    await new Promise(res => setTimeout(res, 3000))
+
+    return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
 
     const result = await fetch('https://api.openai.com/v1/images/generations', {
         method: 'POST',
