@@ -7,13 +7,13 @@ import { generateImage, modifyImage } from '../lib/OpenAI'
 const container: Ref<HTMLDivElement> = ref(null) as any
 const canvas: Ref<HTMLCanvasElement> = ref(null) as any
 
-type Node = { x: number; y: number; img: string; id: string; backlinks: string[]; pointsTo: string[] }
+type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
 
 const nodes: Ref<Node[]> = ref([
     {
         x: 100,
         y: 200,
-        img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/250px-Image_created_with_a_mobile_phone.png',
+        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/250px-Image_created_with_a_mobile_phone.png',
         id: '1',
         backlinks: [],
         pointsTo: ['2'],
@@ -21,7 +21,7 @@ const nodes: Ref<Node[]> = ref([
     {
         x: 500,
         y: 400,
-        img: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s',
         id: '2',
         backlinks: ['1'],
         pointsTo: [],
@@ -162,22 +162,24 @@ async function addNewNode(prompt: string, backlinks: string[], locationX: number
     console.log('Selected model in addNewNode:', window.selectedModel)
 
     // image = await generateImage(prompt)
-    image = await modifyImage(nodeLookup[backlinks[0]].img, prompt)
 
     const id = Math.random().toString()
     const node = {
         x: locationX,
         y: locationY,
-        img: image,
+        image: null,
         id,
         backlinks: backlinks,
         pointsTo: [],
     }
+
     nodes.value.push(node)
     nodeLookup[id] = node
     for (const backlink of backlinks) {
         nodeLookup[backlink].pointsTo.push(id)
     }
+
+    node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
 }
 
 function openPrompt(node?: Node) {
@@ -210,14 +212,18 @@ function openPrompt(node?: Node) {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 border border-[var(--color-border)] rounded-xl"
+            class="absolute w-24 h-24 border border-[var(--color-border)] bg-[var(--color-element)] rounded-xl"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
                 top: `${viewOffsetY + node.y}px`,
             }"
             @click="openPrompt(node)"
         >
-            <img class="w-full h-full object-cover select-none rounded-xl" :src="node.img" draggable="false" />
+            <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
+                <div class="spinner" />
+            </div>
+
+            <img v-if="node.image !== null" class="w-full h-full object-cover select-none rounded-xl" :src="node.image" draggable="false" />
         </div>
 
         <Prompt
@@ -235,5 +241,28 @@ function openPrompt(node?: Node) {
 .grid {
     width: calc(100% + 48px);
     height: calc(100% + 48px);
+}
+
+.spinner {
+    margin: 0.1rem;
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid var(--color-border);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s ease infinite;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(90deg);
+    }
+    100% {
+        transform: rotate(450deg);
+    }
 }
 </style>
