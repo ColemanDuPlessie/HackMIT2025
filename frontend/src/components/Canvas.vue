@@ -56,8 +56,8 @@ function render() {
             const otherNode = nodeLookup[connection]
 
             ctx.beginPath()
-            ctx.moveTo(node.x + viewOffsetX.value, node.y + viewOffsetY.value)
-            ctx.lineTo(otherNode.x + viewOffsetX.value, otherNode.y + viewOffsetY.value)
+            ctx.moveTo(node.x + viewOffsetX.value+50, node.y + viewOffsetY.value+50)
+            ctx.lineTo(otherNode.x + viewOffsetX.value+50, otherNode.y + viewOffsetY.value+50)
             ctx.stroke()
         }
     }
