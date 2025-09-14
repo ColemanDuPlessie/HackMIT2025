@@ -19,7 +19,7 @@ export const nodes: Ref<Node[]> = ref([
         image: './public/dog_hat.png',
         id: '2',
         backlinks: ['1'],
-        pointsTo: [],
+        pointsTo: ['6'],
     },
     {
         x: 300,
@@ -29,21 +29,39 @@ export const nodes: Ref<Node[]> = ref([
         backlinks: ['1'],
         pointsTo: [],
     },
-    // {
-    //     x: 500,
-    //     y: 200,
-    //     image: './public/dog2.png',
-    //     id: '4',
-    //     backlinks: [],
-    //     pointsTo: [],
-    // }
+    {
+        x: 500,
+        y: 200,
+        image: './public/dog2.png',
+        id: '4',
+        backlinks: [],
+        pointsTo: ['5'],
+    },
+    {
+        x: 500,
+        y: 500,
+        image: './public/dog2_red.png',
+        id: '5',
+        backlinks: ['4'],
+        pointsTo: ['6'],
+    },
+    {
+        x: 300,
+        y: 300,
+        image: './public/dog_red_hat.png',
+        id: '6',
+        backlinks: ['5', '2'],
+        pointsTo: [],
+    }
 ])
 
 export const nodeLookup: Record<string, Node> = {
     '1': nodes.value[0],
     '2': nodes.value[1],
     '3': nodes.value[2],
-    '4': nodes.value[4],
+    '4': nodes.value[3],
+    '5': nodes.value[4],
+    '6': nodes.value[5],
 }
 
 export const selectedNodes: Ref<Node[]> = ref([])
