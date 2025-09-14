@@ -1,5 +1,5 @@
 import { onMounted, ref, type Ref } from 'vue'
-import { generateImage, modifyImage } from './OpenAI';
+import { generateImage, mergeImages, modifyImage } from './OpenAI';
 import { genImg } from './unified_imggen';
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
@@ -87,7 +87,7 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
         }
     } else {
         // TODO: Blend images together
-        node.image = await generateImage(prompt)
+        node.image = await mergeImages(backlinks.map(backlink => nodeLookup[backlink].image), prompt)
     }
 }
 
