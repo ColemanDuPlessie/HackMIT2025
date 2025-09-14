@@ -180,10 +180,10 @@ function closeExpanded() {
 
         <div
             v-for="node in nodes"
-            class="absolute w-24 h-24 bg-[var(--color-element)] rounded-xl transition-[border] duration-100 ease-in-out"
+            class="absolute w-24 h-24 border bg-[var(--color-element)] rounded-xl transition-[border] duration-100 ease-in-out"
             :class="{
-                'border border-[var(--color-border)]': !isNodeSelected(node),
-                'border-2 border-[var(--color-accent)] scale-105': isNodeSelected(node),
+                'border-[var(--color-border)]': !isNodeSelected(node),
+                'border-[var(--color-accent)] scale-105': isNodeSelected(node),
             }"
             :style="{
                 left: `${viewOffsetX + node.x}px`,
