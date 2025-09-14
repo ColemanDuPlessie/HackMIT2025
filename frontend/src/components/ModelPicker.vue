@@ -4,7 +4,13 @@ import { selectedModel } from '../lib/State'
 
 const menuVisible = ref(false)
 
-const models = { dummy: 'Dummy', 'dall-e-3': 'Dall-E 3', 'dall-e-2': 'Dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0' }
+const models = {
+    dummy: 'Dummy',
+    'dall-e-3': 'Dall-E 3',
+    'dall-e-2': 'Dall-E 2',
+    'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0',
+    'Qwen-Image-Edit': 'Qwen Image Edit',
+}
 </script>
 
 <template>
