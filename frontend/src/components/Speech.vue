@@ -3,7 +3,7 @@
     <button
       @click="toggleRecognition"
       :class="[
-        'px-4 py-2 rounded shadow transition',
+        'h-10 px-6 rounded shadow transition font-medium',
         isListening
           ? 'bg-red-600 text-white animate-pulse'
           : 'bg-[var(--color-element)] text-[var(--color-text-alt)] hover:opacity-80'
@@ -38,7 +38,7 @@ export default {
       }
       this.recognition = new SpeechRecognition();
       this.recognition.continuous = true;
-      this.recognition.interimResults = true; // show partials
+      this.recognition.interimResults = true; // show partial results
       this.recognition.lang = "en-US";
 
       this.recognition.onresult = (event) => {
@@ -48,7 +48,6 @@ export default {
         }
         this.transcript = text.trim();
 
-        // If the result is final, emit to App.vue
         if (event.results[event.results.length - 1].isFinal) {
           this.$emit("transcriptUpdate", this.transcript);
         }
@@ -65,7 +64,7 @@ export default {
         this.recognition.stop();
         this.isListening = false;
       } else {
-        this.transcript = ""; // clear old transcript
+        this.transcript = "";
         this.recognition.start();
         this.isListening = true;
       }
@@ -76,6 +75,6 @@ export default {
 
 <style scoped>
 button.animate-pulse {
-  box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.9);
 }
 </style>

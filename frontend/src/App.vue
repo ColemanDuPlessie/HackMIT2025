@@ -71,7 +71,7 @@ function prompt(prompt: string) {
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
         <ModelPicker />
         <Prompt class="grow" @prompt="prompt" />
-        <Speech @transcriptUpdate="prompt" /> <!-- 👈 speech input -->
+        <Speech @transcriptUpdate="prompt" />
         <Actions />
     </div>
 
