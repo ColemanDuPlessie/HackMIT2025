@@ -16,7 +16,7 @@ export async function generateImage(prompt?: string) {
         });
 
         const result = await response.json();
-        return 'data:image/png;base64, ' + result.data[0].url;
+        return 'data:image/png;base64, ' + result.data[0].b64_json;
 }
 
 export async function modifyImage(image: string, prompt?: string) {
