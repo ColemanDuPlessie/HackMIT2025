@@ -19,13 +19,6 @@ function goHome() {
 
     xOffset = averageX - (-viewOffsetX.value + document.body.offsetWidth / 2)
     yOffset = averageY - (-viewOffsetY.value + document.body.offsetHeight / 2)
-
-    console.log(viewOffsetX.value, viewOffsetY.value)
-    console.log(averageX, averageY)
-    console.log(xOffset, yOffset)
-
-    // viewOffsetX.value -= xOffset
-    // viewOffsetY.value -= yOffset
 }
 
 let lastTime = Date.now()
