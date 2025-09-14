@@ -37,7 +37,7 @@ export async function genImg(model="dummy", prompt: string, img?: string) {
         const hf = new InferenceClient(import.meta.env.VITE_HUGGING_KEY);
         var blob = "";
         if (model == "Qwen-Image-Edit") {
-            console.log("Fetching old image for editing");
+            console.log("Fetching old image for editing")
             let oldImg = await fetch(img).then(r => r.blob());
             console.log("Using HuggingFace API for image editing");
             blob = URL.createObjectURL(await hf.imageToImage({

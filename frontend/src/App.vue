@@ -79,9 +79,9 @@ function prompt(prompt: string) {
                 <button @click="closeInstructions" class="absolute top-2 right-2 text-xl font-bold text-white">&times;</button>
                 <h2 class="text-2xl font-bold mb-4">Instructions</h2>
                 <ul class="list-disc pl-6 space-y-6 text-base instructions-list">
-                    <li>To start a new tree enter your prompt into the textbox and hit enter or click the create button to the right to generate an unlinked node</li>
-                    <li>To add on to an existing node, select that node, enter your prompt into the textbox, and hit enter or click the modify button to link a child node</li>
-                    <li>To create a child between multiple existing nodes, select all nodes you wish to combine, enter a prompt (optional), and hit the merge button at the bottom right</li>
+                    <li>Create an unlinked idea: Enter your prompt. Press enter or click the add button. A "root" idea will generate.</li>
+                    <li>Modify an existing idea: Select an idea. Enter your prompt. Press enter or click the modify button. A "child" idea will generate. </li>
+                    <li>Merge multiple ideas: Select 2+ ideas. Enter your prompt (optional). Press enter or click the merge button. A "child" idea will generate. </li>
                 </ul>
             </div>
         </div>
