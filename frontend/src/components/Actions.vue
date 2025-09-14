@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue'
-import { deleteSelectedNodes, nodes, viewOffsetX, viewOffsetY } from '../lib/State'
+import { onMounted, ref } from 'vue'
+import { addNewNode, deleteSelectedNodes, nodeLookup, nodes, viewOffsetX, viewOffsetY, type Node } from '../lib/State'
+import type { Ref } from 'vue/dist/vue.js'
 
 let xOffset = 0
 let yOffset = 0
+
+const filePicker: Ref<HTMLInputElement> = ref(null)
 
 function goHome() {
     let sumX = 0
@@ -40,6 +43,42 @@ function update() {
     requestAnimationFrame(update)
 }
 
+function importImage() {
+    filePicker.value.click()
+}
+
+onMounted(() => {
+    filePicker.value.addEventListener('change', event => {
+        //@ts-ignore
+        const file = event.target.files[0]
+    
+        if (file && file.type.startsWith('image/')) {
+            const reader = new FileReader()
+            
+            reader.onload = function(e) {
+                const imageDataUrl = e.target.result
+
+                if(typeof imageDataUrl !== 'string') return
+
+                const id = Math.random().toString()
+                const node: Node = {
+                    x: viewOffsetX.value,
+                    y: viewOffsetY.value,
+                    image: imageDataUrl,
+                    id,
+                    backlinks: [],
+                    pointsTo: [],
+                }
+
+                nodes.value.push(node)
+                nodeLookup[id] = node
+            }
+            
+            reader.readAsDataURL(file)
+        }
+    })
+})
+
 onMounted(() => {
     update()
 })
@@ -56,8 +95,11 @@ onMounted(() => {
 
         <button
             class="flex cursor-pointer items-center px-1.5 m-1 grow select-none hover:bg-[var(--color-background)] border border-[var(--color-border)] rounded-lg transition-colors duration-100 ease-in-out hover:duration-0"
-        >
+            @click="importImage"
+            >
             <span class="material-symbols-outlined text-[var(--color-text-alt)] block"> add_photo_alternate </span>
+
+            <input type="file" class="hidden" ref="filePicker"></input>
         </button>
 
         <button
