@@ -6,16 +6,17 @@ const menuVisible = ref(false)
 
 const models = {
     dummy: 'Dummy',
+    'sdxl-lightning': 'Stable Diffusion Lightning',
     'gpt-image-1': 'GPT Image 1',
-    'dall-e-3': 'Dall-E 3',
-    'dall-e-2': 'Dall-E 2',
-    'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0',
-    'Qwen-Image-Edit': 'Qwen Image Edit',
+    // 'dall-e-3': 'Dall-E 3',
+    // 'dall-e-2': 'Dall-E 2',
+    // 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0',
+    // 'Qwen-Image-Edit': 'Qwen Image Edit',
 }
 </script>
 
 <template>
-    <div class="relative w-58">
+    <div class="relative w-64">
         <div
             class="flex w-full bg-[var(--color-element)] border border-[var(--color-border)] text-[var(--color-text)] rounded-xl cursor-pointer relative z-10"
             @click="menuVisible = !menuVisible"

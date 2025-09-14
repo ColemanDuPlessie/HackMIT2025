@@ -1,6 +1,6 @@
 import { onMounted, ref, type Ref } from 'vue'
-import { generateImage, mergeImages, modifyImage } from './OpenAI';
-import { generateImage as generateImageLocal } from './Local';
+import { generateImage, mergeImages, modifyImage } from './OpenAI'
+import { generateImage as generateImageLocal } from './Local'
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
 
@@ -35,23 +35,26 @@ export function isNodeSelected(node: Node) {
 }
 
 export function selectNode(node: Node) {
-    if(isNodeSelected(node)) return
+    if (isNodeSelected(node)) return
 
-    if(selectedNodes.value.length === 16) return
+    if (selectedNodes.value.length === 16) return
 
     selectedNodes.value.push(node)
     selectedNodes.value = [...selectedNodes.value]
 }
 
 export function deselectNode(node: Node) {
-    if(!isNodeSelected(node)) return
+    if (!isNodeSelected(node)) return
 
-    selectedNodes.value.splice(selectedNodes.value.findIndex(otherNode => otherNode.id === node.id), 1)
+    selectedNodes.value.splice(
+        selectedNodes.value.findIndex(otherNode => otherNode.id === node.id),
+        1
+    )
     selectedNodes.value = [...selectedNodes.value]
 }
 
 export function toggleNodeSelected(node: Node) {
-    if(isNodeSelected(node)) {
+    if (isNodeSelected(node)) {
         deselectNode(node)
     } else {
         selectNode(node)
@@ -76,33 +79,53 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 
     if (backlinks.length === 0) {
-        node.image = await generateImageLocal(prompt)
+        if (selectedModel.value === 'sdxl-lightning') {
+            node.image = await generateImageLocal(prompt)
+        } else if (selectedModel.value === 'dummy') {
+            node.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
+        } else {
+            node.image = await generateImage(prompt)
+        }
     } else if (backlinks.length == 1) {
-        node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
+        if (selectedModel.value === 'dummy') {
+            node.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
+        } else {
+            node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
+        }
     } else {
-        node.image = await mergeImages(backlinks.map(backlink => nodeLookup[backlink].image), prompt)
+        if (selectedModel.value === 'dummy') {
+            node.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
+        } else {
+            node.image = await mergeImages(
+                backlinks.map(backlink => nodeLookup[backlink].image),
+                prompt
+            )
+        }
     }
 }
 
 export function deleteNode(node: Node) {
     delete nodeLookup[node.id]
 
-    for(const otherNode of nodes.value) {        
-        if(otherNode.backlinks.includes(node.id)) otherNode.backlinks.splice(otherNode.backlinks.indexOf(node.id), 1)
-        if(otherNode.pointsTo.includes(node.id)) otherNode.pointsTo.splice(otherNode.pointsTo.indexOf(node.id), 1)
+    for (const otherNode of nodes.value) {
+        if (otherNode.backlinks.includes(node.id)) otherNode.backlinks.splice(otherNode.backlinks.indexOf(node.id), 1)
+        if (otherNode.pointsTo.includes(node.id)) otherNode.pointsTo.splice(otherNode.pointsTo.indexOf(node.id), 1)
     }
 
-    nodes.value.splice(nodes.value.findIndex(otherNode => otherNode.id === node.id), 1)
-    
+    nodes.value.splice(
+        nodes.value.findIndex(otherNode => otherNode.id === node.id),
+        1
+    )
+
     nodes.value = [...nodes.value]
 
-    if(isNodeSelected(node)) deselectNode(node)
+    if (isNodeSelected(node)) deselectNode(node)
 }
 
 export function deleteSelectedNodes() {
     const nodesToDelete = [...selectedNodes.value]
 
-    for(const node of nodesToDelete) {
+    for (const node of nodesToDelete) {
         deleteNode(node)
     }
 
@@ -112,4 +135,4 @@ export function deleteSelectedNodes() {
 export const viewOffsetX = ref(0)
 export const viewOffsetY = ref(0)
 
-export const selectedModel = ref('dummy')
+export const selectedModel = ref('gpt-image-1')
