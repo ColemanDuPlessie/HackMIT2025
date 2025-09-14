@@ -191,6 +191,7 @@ function closeExpanded() {
             }"
             @click="node.image !== null ? toggleNodeSelected(node) : undefined"
             @click.middle="openBig(node)"
+            @click.right.prevent="openBig(node)"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
                 <div class="spinner" />
