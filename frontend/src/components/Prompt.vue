@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { selectedNodes } from '../lib/State'
 
 const emit = defineEmits(['prompt'])
 
@@ -10,6 +11,20 @@ function keydown(event: KeyboardEvent) {
 
     emit('prompt', prompt.value)
 }
+
+const placeholder = computed(() => {
+    if (selectedNodes.value.length === 1) return 'Describe your changes...'
+    if (selectedNodes.value.length > 1) return 'Merge these images...'
+
+    return 'Begin with a new idea...'
+})
+
+const icon = computed(() => {
+    if (selectedNodes.value.length === 1) return 'brush'
+    if (selectedNodes.value.length > 1) return 'merge'
+
+    return 'add'
+})
 </script>
 
 <template>
@@ -17,8 +32,8 @@ function keydown(event: KeyboardEvent) {
         <input
             type="text"
             v-model="prompt"
-            placeholder="Begin with a new idea..."
-            class="min-w-0 placeholder:text-[var(--color-text-alt)] outline-none border-none px-4 py-3 grow h-full"
+            :placeholder="placeholder"
+            class="min-w-0 placeholder:text-[var(--color-text-alt)] outline-none border-none px-4 py-3.5 grow h-full"
             @keydown="keydown"
         />
 
@@ -26,7 +41,7 @@ function keydown(event: KeyboardEvent) {
             class="bg-[var(--color-accent)] rounded-md flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 ease-in-out"
             @click="emit('prompt', prompt)"
         >
-            <span class="material-symbols-outlined text-[var(--color-accent-button)] block"> add </span>
+            <span class="material-symbols-outlined text-[var(--color-accent-button)] block"> {{ icon }} </span>
         </button>
     </div>
 </template>
