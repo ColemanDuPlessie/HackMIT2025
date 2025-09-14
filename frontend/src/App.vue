@@ -5,7 +5,6 @@ import { ref } from 'vue'
 import { addNewNode, selectedNodes, viewOffsetX, viewOffsetY } from './lib/State'
 import ModelPicker from './components/ModelPicker.vue'
 import Actions from './components/Actions.vue'
-import SpeechOld from './components/SpeechOld.vue'
 
 // Global type augmentation to include selectedModel in window
 declare global {
@@ -14,15 +13,10 @@ declare global {
     }
 }
 
-const showMenu = ref(false)
 const showInstructions = ref(false)
 
-function openInstructions() {
-    showInstructions.value = true
-    showMenu.value = false
-}
-function closeInstructions() {
-    showInstructions.value = false
+function toggleInstructions() {
+    showInstructions.value = !showInstructions.value
 }
 
 function prompt(prompt: string) {
@@ -61,31 +55,27 @@ function prompt(prompt: string) {
     </div>
 
     <!-- Hamburger Menu -->
-    <div class="fixed top-4 right-4 z-50">
+    <div class="absolute top-4 right-4 z-200">
         <button
-            @click="showMenu = !showMenu"
-            class="flex flex-col justify-center items-center w-10 h-10 bg-[var(--color-element)] text-[var(--color-text-alt)] rounded shadow-lg focus:outline-none"
+            @click="toggleInstructions"
+            class="flex flex-col justify-center items-center w-10 h-10 bg-[var(--color-element)] text-[var(--color-text-alt)] focus:outline-none border border-[var(--color-border)] rounded-lg"
         >
-            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300" :class="showMenu ? 'rotate-45 translate-y-2' : ''"></span>
-            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300" :class="showMenu ? 'opacity-0' : ''"></span>
-            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] transition-all duration-300" :class="showMenu ? '-rotate-45 -translate-y-2' : ''"></span>
+            <span
+                class="block w-5 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300"
+                :class="showInstructions ? 'rotate-45 translate-y-2' : ''"
+            ></span>
+            <span class="block w-5 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300" :class="showInstructions ? 'opacity-0' : ''"></span>
+            <span
+                class="block w-5 h-0.5 bg-[var(--color-text-alt)] transition-all duration-300"
+                :class="showInstructions ? '-rotate-45 -translate-y-2' : ''"
+            ></span>
         </button>
-        <transition name="fade-slide">
-            <div v-if="showMenu" class="absolute mt-2 right-0 bg-black text-white rounded shadow-lg min-w-[160px] p-4">
-                <div class="mb-2 font-bold">Menu</div>
-                <ul>
-                    <li class="py-1 hover:bg-gray-700 rounded px-2 cursor-pointer" @click="showMenu = false">Home</li>
-                    <li class="py-1 hover:bg-gray-700 rounded px-2 cursor-pointer" @click="openInstructions">Instructions</li>
-                </ul>
-            </div>
-        </transition>
     </div>
 
     <!-- Instructions Modal -->
     <transition name="fade-slide">
-        <div v-if="showInstructions" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-            <div class="bg-black text-white rounded-lg p-8 max-w-lg w-full relative">
-                <button @click="closeInstructions" class="absolute top-2 right-2 text-xl font-bold text-white">&times;</button>
+        <div v-if="showInstructions" class="fixed inset-0 bg-[var(--color-background-trans)] flex items-center justify-center z-50 backdrop-blur">
+            <div class="text-white rounded-lg p-8 max-w-lg w-full relative">
                 <h2 class="text-2xl font-bold mb-4">Instructions</h2>
                 <ul class="list-disc pl-6 space-y-6 text-base">
                     <li>Create an unlinked idea: Enter your prompt. Press enter or click the add button. A "root" idea will generate.</li>
