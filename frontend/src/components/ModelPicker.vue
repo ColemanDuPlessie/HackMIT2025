@@ -5,7 +5,7 @@ import { selectedModel } from '../lib/State'
 const menuVisible = ref(false)
 
 const models = {
-    dummy: 'Dummy',
+    // dummy: 'Dummy',
     'sdxl-lightning': 'Stable Diffusion Lightning',
     'gpt-image-1': 'GPT Image 1',
     'dall-e-3': 'Dall-E 3',
