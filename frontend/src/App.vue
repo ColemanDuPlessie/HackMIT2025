@@ -42,6 +42,8 @@ function prompt(prompt: string) {
 </script>
 
 <template>
+    <h1 class="absolute top-5 left-5 text-[var(--color-text)] z-300 text-2xl">BONSAI</h1>
+
     <div class="flex flex-col w-screen h-screen">
         <div class="flex grow">
             <Canvas class="grow" />

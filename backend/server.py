@@ -111,38 +111,4 @@ while True:
 
             print("finished job " + id)
 
-    time.sleep(5)
-
-fast_workflow["3"]["inputs"]["seed"] = random.randint(0, 999999)
-id = str(uuid.uuid4())
-queue_prompt(fast_workflow, id)
-
-while True:
-    history = get_history(id)
-
-    print("skipping! " + id)
-    print(history.keys())
-
-    if not id in history:
-        continue
-
-    job_history = history[id]
-    outputs = job_history['outputs']
-
-    # print(get_queue())
-    print(get_history())
-
-    for node_id in outputs:
-        output = outputs[node_id]
-        images = output['images']
-
-        for image in images:
-            filename = image['filename']
-            subfolder = image['subfolder']
-            folder_type = image['type']
-
-            file = open('./test.png', 'wb')
-            file.write(get_image(filename, subfolder, folder_type))
-            file.close()
-
-    print("\n\n")
+    time.sleep(3)
