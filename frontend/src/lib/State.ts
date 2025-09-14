@@ -86,7 +86,6 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
             node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
         }
     } else {
-        // TODO: Blend images together
         node.image = await mergeImages(backlinks.map(backlink => nodeLookup[backlink].image), prompt)
     }
 }
@@ -94,12 +93,14 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
 export function deleteNode(node: Node) {
     delete nodeLookup[node.id]
 
-    for(const otherNode of nodes.value) {
-        if(otherNode.backlinks.includes(otherNode.id)) otherNode.backlinks.splice(otherNode.backlinks.indexOf(otherNode.id, 1))
-        if(otherNode.pointsTo.includes(otherNode.id)) otherNode.pointsTo.splice(otherNode.pointsTo.indexOf(otherNode.id, 1))
+    for(const otherNode of nodes.value) {        
+        if(otherNode.backlinks.includes(node.id)) otherNode.backlinks.splice(otherNode.backlinks.indexOf(node.id), 1)
+        if(otherNode.pointsTo.includes(node.id)) otherNode.pointsTo.splice(otherNode.pointsTo.indexOf(node.id), 1)
     }
 
     nodes.value.splice(nodes.value.findIndex(otherNode => otherNode.id === node.id), 1)
+    
+    nodes.value = [...nodes.value]
 
     if(isNodeSelected(node)) deselectNode(node)
 }
@@ -110,6 +111,8 @@ export function deleteSelectedNodes() {
     for(const node of nodesToDelete) {
         deleteNode(node)
     }
+
+    console.log(nodes.value)
 }
 
 export const viewOffsetX = ref(0)

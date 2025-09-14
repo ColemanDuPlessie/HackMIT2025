@@ -23,35 +23,43 @@ function render() {
     var diffX, diffY, diffDist
     for (const node of nodes.value) {
         for (const connection of node.pointsTo) {
-            const otherNode = nodeLookup[connection]
+            try {
+                const otherNode = nodeLookup[connection]
 
-            ctx.beginPath()
-            ctx.moveTo(node.x + viewOffsetX.value + 50, node.y + viewOffsetY.value + 50)
-            ctx.lineTo(otherNode.x + viewOffsetX.value + 50, otherNode.y + viewOffsetY.value + 50)
-            ctx.stroke()
+                ctx.beginPath()
+                ctx.moveTo(node.x + viewOffsetX.value + 50, node.y + viewOffsetY.value + 50)
+                ctx.lineTo(otherNode.x + viewOffsetX.value + 50, otherNode.y + viewOffsetY.value + 50)
+                ctx.stroke()
 
-            diffX = otherNode.x - node.x
-            diffY = otherNode.y - node.y
-            diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
+                diffX = otherNode.x - node.x
+                diffY = otherNode.y - node.y
+                diffDist = Math.sqrt(diffX * diffX + diffY * diffY)
 
-            ctx.beginPath()
+                ctx.beginPath()
 
-            ctx.moveTo(
-                node.x + diffX / 2 + viewOffsetX.value + 50 + (diffX * 10) / diffDist,
-                node.y + diffY / 2 + viewOffsetY.value + 50 + (diffY * 10) / diffDist
-            )
+                ctx.moveTo(
+                    node.x + diffX / 2 + viewOffsetX.value + 50 + (diffX * 10) / diffDist,
+                    node.y + diffY / 2 + viewOffsetY.value + 50 + (diffY * 10) / diffDist
+                )
 
-            ctx.lineTo(
-                node.x + diffX / 2 - (diffY * 10) / diffDist + viewOffsetX.value + 50,
-                node.y + diffY / 2 + (diffX * 10) / diffDist + viewOffsetY.value + 50
-            )
+                ctx.lineTo(
+                    node.x + diffX / 2 - (diffY * 10) / diffDist + viewOffsetX.value + 50,
+                    node.y + diffY / 2 + (diffX * 10) / diffDist + viewOffsetY.value + 50
+                )
 
-            ctx.lineTo(
-                node.x + diffX * 0.5 + (diffY * 10) / diffDist + viewOffsetX.value + 50,
-                node.y + diffY / 2 - (diffX * 10) / diffDist + viewOffsetY.value + 50
-            )
-            ctx.closePath()
-            ctx.fill()
+                ctx.lineTo(
+                    node.x + diffX * 0.5 + (diffY * 10) / diffDist + viewOffsetX.value + 50,
+                    node.y + diffY / 2 - (diffX * 10) / diffDist + viewOffsetY.value + 50
+                )
+                ctx.closePath()
+                ctx.fill()
+            } catch {
+                console.log(nodes.value)
+                console.log(connection)
+                console.log(nodeLookup[connection])
+
+                throw new Error('stop')
+            }
         }
     }
 }
@@ -127,7 +135,6 @@ function update() {
     render()
 
     requestAnimationFrame(update)
-    // setTimeout(update, 1000)
 }
 
 onMounted(() => {
@@ -199,15 +206,6 @@ function closeExpanded() {
 
             <img v-if="node.image !== null" class="w-full h-full object-cover select-none rounded-xl" :src="node.image" draggable="false" />
         </div>
-
-        <!-- <Prompt
-            class="absolute w-48 h-10"
-            :style="{
-                left: `${viewOffsetX + promptLocationX}px`,
-                top: `${viewOffsetY + promptLocationY}px`,
-            }"
-            @prompt="prompt => addNewNode(prompt, [promptOpenNode.id], promptOpenNode.x + Math.random() * 100, promptOpenNode.y + Math.random() * 100)"
-        />
 
         <!-- Expanded Image Modal -->
         <div v-if="expandedImage" class="modal-overlay" @click.self="closeExpanded">
