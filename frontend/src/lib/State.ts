@@ -8,24 +8,42 @@ export const nodes: Ref<Node[]> = ref([
     {
         x: 100,
         y: 200,
-        image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/250px-Image_created_with_a_mobile_phone.png',
+        image: './public/dog.png',
         id: '1',
         backlinks: [],
-        pointsTo: ['2'],
+        pointsTo: ['2', '3'],
     },
     {
         x: 500,
         y: 400,
-        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s',
+        image: './public/dog_hat.png',
         id: '2',
         backlinks: ['1'],
         pointsTo: [],
     },
+    {
+        x: 300,
+        y: 200,
+        image: './public/doge_blue.png',
+        id: '3',
+        backlinks: ['1'],
+        pointsTo: [],
+    },
+    // {
+    //     x: 500,
+    //     y: 200,
+    //     image: './public/dog2.png',
+    //     id: '4',
+    //     backlinks: [],
+    //     pointsTo: [],
+    // }
 ])
 
 export const nodeLookup: Record<string, Node> = {
     '1': nodes.value[0],
     '2': nodes.value[1],
+    '3': nodes.value[2],
+    '4': nodes.value[4],
 }
 
 export const selectedNodes: Ref<Node[]> = ref([])
