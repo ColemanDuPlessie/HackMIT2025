@@ -5,6 +5,7 @@ import { ref, watch } from 'vue'
 import { addNewNode, selectedNodes, viewOffsetX, viewOffsetY } from './lib/State'
 import ModelPicker from './components/ModelPicker.vue'
 import Actions from './components/Actions.vue'
+import Speech from './components/Speech.vue'
 
 // Global type augmentation to include selectedModel in window
 declare global {
@@ -70,6 +71,7 @@ function prompt(prompt: string) {
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
         <ModelPicker />
         <Prompt class="grow" @prompt="prompt" />
+        <Speech @transcriptUpdate="prompt" /> <!-- 👈 speech input -->
         <Actions />
     </div>
 
@@ -88,7 +90,6 @@ function prompt(prompt: string) {
                 <div class="mb-2 font-bold">Menu</div>
                 <ul>
                     <li class="py-1 hover:bg-gray-700 rounded px-2 cursor-pointer" @click="showMenu = false">Home</li>
-                    <!-- <li class="py-1 hover:bg-gray-700 rounded px-2 cursor-pointer" @click="showMenu = false">Settings</li> -->
                     <li class="py-1 hover:bg-gray-700 rounded px-2 cursor-pointer" @click="openInstructions">Instructions</li>
                 </ul>
             </div>
