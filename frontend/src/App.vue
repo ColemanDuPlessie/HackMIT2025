@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import Prompt from './components/Prompt.vue'
-import ModelPicker from './components/ModelPicker.vue'
-import Actions from './components/Actions.vue'
 import Canvas from './components/Canvas.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { addNewNode, selectedNodes, viewOffsetX, viewOffsetY } from './lib/State'
 
 // Global type augmentation to include selectedModel in window
@@ -13,8 +11,15 @@ declare global {
     }
 }
 
+const MODELS = { dummy: 'Random Dummy Image', 'dall-e-3': 'dall-E 3', 'dall-e-2': 'dall-E 2', 'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0', "gpt-image-1": "GPT-4o Imagegen", "Qwen-Image-Edit":"Qwen Image Editing" }
+const selectedModel = ref('dummy')
 const showMenu = ref(false)
 const showInstructions = ref(false)
+
+window.selectedModel = selectedModel.value
+watch(selectedModel, val => {
+    window.selectedModel = val
+})
 
 function openInstructions() {
     showInstructions.value = true
@@ -48,9 +53,7 @@ function prompt(prompt: string) {
     </div>
 
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
-        <ModelPicker />
         <Prompt class="grow" @prompt="prompt" />
-        <Actions />
     </div>
 
     <!-- Hamburger Menu -->
@@ -78,10 +81,8 @@ function prompt(prompt: string) {
             <div class="bg-black text-white rounded-lg p-8 max-w-lg w-full relative">
                 <button @click="closeInstructions" class="absolute top-2 right-2 text-xl font-bold text-white">&times;</button>
                 <h2 class="text-2xl font-bold mb-4">Instructions</h2>
-                <ul class="list-disc pl-6 space-y-6 text-base instructions-list">
-                    <li>Create an unlinked idea: Enter your prompt. Press enter or click the add button. A "root" idea will generate.</li>
-                    <li>Modify an existing idea: Select an idea. Enter your prompt. Press enter or click the modify button. A "child" idea will generate. </li>
-                    <li>Merge multiple ideas: Select 2+ ideas. Enter your prompt (optional). Press enter or click the merge button. A "child" idea will generate. </li>
+                <ul class="list-disc pl-6 space-y-2 text-base">
+                    <li>WRITE INSTRUCTIONS</li>
                 </ul>
             </div>
         </div>

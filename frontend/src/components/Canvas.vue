@@ -190,6 +190,7 @@ function closeExpanded() {
                 top: `${viewOffsetY + node.y}px`,
             }"
             @click="node.image !== null ? toggleNodeSelected(node) : undefined"
+            @click.middle="openBig(node)"
         >
             <div v-if="node.image === null" class="w-full h-full flex items-center justify-center">
                 <div class="spinner" />
