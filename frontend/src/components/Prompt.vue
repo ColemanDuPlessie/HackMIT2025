@@ -13,10 +13,10 @@ function keydown(event: KeyboardEvent) {
 }
 
 const placeholder = computed(() => {
-    if (selectedNodes.value.length === 1) return 'Describe your changes...'
-    if (selectedNodes.value.length > 1) return 'Merge these images...'
+    if (selectedNodes.value.length === 1) return 'Modify selected idea...'
+    if (selectedNodes.value.length > 1) return 'Merge selected ideas...'
 
-    return 'Begin with a new idea...'
+    return 'Describe a new idea...'
 })
 
 const icon = computed(() => {
