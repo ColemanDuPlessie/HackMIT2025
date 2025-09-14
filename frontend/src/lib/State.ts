@@ -76,7 +76,7 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 
     if (backlinks.length === 0) {
-        node.image = await generateImage(prompt)
+        node.image = await generateImageLocal(prompt)
     } else if (backlinks.length == 1) {
         node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
     } else {

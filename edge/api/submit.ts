@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { id, image } = JSON.parse(Object.keys(req.body)[0])
+  const { id, image } = req.body
 
   const completed: any[] = await redis.get('completed') ?? []
   completed.push({

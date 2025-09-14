@@ -15,7 +15,7 @@ export async function generateImage(prompt?: string) {
             body: id
         })
 
-        if(result.status === 404) {
+        if(result.status === 201) {
             await new Promise(res => setTimeout(res, 500))
             
             continue
