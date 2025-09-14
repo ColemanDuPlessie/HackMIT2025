@@ -1,5 +1,6 @@
 import { onMounted, ref, type Ref } from 'vue'
 import { generateImage, modifyImage } from './OpenAI';
+import { genImg } from './unified_imggen';
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
 
@@ -73,12 +74,21 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 
     if (backlinks.length === 0) {
-        node.image = await generateImage(prompt)
+        node.image = await generateImage(window.selectedModel, prompt)
         
         return
+    } else if (backlinks.length == 1) {
+        if (window.selectedModel === "Qwen-Image-Edit") {
+            console.log("Editing image based on backlink image");
+            // Use the backlink image to modify
+            node.image = await genImg(window.selectedModel, prompt, nodeLookup[backlinks[0]].image)
+        } else {
+            node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
+        }
+    } else {
+        // TODO: Blend images together
+        node.image = await generateImage(prompt)
     }
-
-    node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
 }
 
 export const viewOffsetX = ref(0)

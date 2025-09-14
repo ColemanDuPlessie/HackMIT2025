@@ -1,7 +1,7 @@
 import { InferenceClient } from '@huggingface/inference';
 
 
-export async function generateImage(model="dummy", prompt: string) {
+export async function genImg(model="dummy", prompt: string, img?: string) {
     /**
      * Returns a URL to a generated image based on the specified model and prompt.
     */
@@ -25,16 +25,37 @@ export async function generateImage(model="dummy", prompt: string) {
         });
         const result = await response.json();
         return result.data[0].url;
-   } else if (model == "stable-diffusion-xl-1.0" || model == "stable-diffusion-2" || model == "instruct-pix2pix") {
+   } else if (model == "stable-diffusion-xl-1.0" || model == "stable-diffusion-2" || model == "Qwen-Image-Edit") {
+        var model_full_name = "";
+        if (model == "stable-diffusion-xl-1.0") {
+            model_full_name = "stabilityai/stable-diffusion-xl-1.0"
+        } else if (model == "stable-diffusion-2") {
+            model_full_name = "stabilityai/stable-diffusion-2-base"
+        } else if (model == "Qwen-Image-Edit") {
+            model_full_name = "Qwen/Qwen-Image-Edit"
+        }
         const hf = new InferenceClient(import.meta.env.VITE_HUGGING_KEY);
-        console.log("Using HuggingFace API for image generation");
-        const blob:string = await hf.textToImage({
-        inputs:
-            prompt ?? 'A happy puppy in a jungle' + " <lora:iu_V35:0.5> <lora:epiNoiseoffset_v2:0.5>",
-        parameters: {
-            negative_prompt: "easynegative",
-        },
-        model: "stabilityai/"+model,});
+        var blob = "";
+        if (model == "Qwen-Image-Edit") {
+            console.log("Fetching old image for editing");
+            let oldImg = await fetch(img).then(r => r.blob());
+            console.log("Using HuggingFace API for image editing");
+            blob = URL.createObjectURL(await hf.imageToImage({
+	provider: "fal-ai",
+	model: "Qwen/Qwen-Image-Edit",
+	inputs: oldImg,
+	parameters: { prompt: "Turn the cat into a tiger.", },
+}));
+        } else {
+            console.log("Using HuggingFace API for image generation");
+            blob = await hf.textToImage({
+            inputs:
+                prompt ?? 'A happy puppy in a jungle' + " <lora:iu_V35:0.5> <lora:epiNoiseoffset_v2:0.5>",
+            parameters: {
+                negative_prompt: "easynegative",
+            },
+            model: model_full_name,});
+        }
         return blob; // URL.createObjectURL(blob);
     }
 }
