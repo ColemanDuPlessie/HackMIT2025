@@ -93,3 +93,5 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
 
 export const viewOffsetX = ref(0)
 export const viewOffsetY = ref(0)
+
+export const selectedModel = ref('dummy')
