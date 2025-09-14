@@ -81,7 +81,7 @@ function prompt(prompt: string) {
                 <ul class="list-disc pl-6 space-y-6 text-base instructions-list">
                     <li>To start a new tree enter your prompt into the textbox and hit enter or click the create button to the right to generate an unlinked node</li>
                     <li>To add on to an existing node, select that node, enter your prompt into the textbox, and hit enter or click the modify button to link a child node</li>
-                    <li>To create a child between multiple existing nodes, select all nodes you wish to combine and hit the merge button at the bottom right</li>
+                    <li>To create a child between multiple existing nodes, select all nodes you wish to combine, enter a prompt (optional), and hit the merge button at the bottom right</li>
                 </ul>
             </div>
         </div>
