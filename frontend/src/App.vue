@@ -40,12 +40,16 @@ function closeInstructions() {
 
 function prompt(prompt: string) {
     if (selectedNodes.value.length === 0) {
-        addNewNode(prompt, [], viewOffsetX.value, viewOffsetY.value)
+        if (prompt.length === 0) return
+
+        addNewNode(prompt, [], -viewOffsetX.value + document.body.offsetWidth / 2, -viewOffsetY.value + document.body.offsetHeight / 2)
     } else if (selectedNodes.value.length === 1) {
+        if (prompt.length === 0) return
+
         addNewNode(prompt, [selectedNodes.value[0].id], selectedNodes.value[0].x + Math.random() * 100, selectedNodes.value[0].y + Math.random() * 100)
     } else if (selectedNodes.value.length > 1) {
         addNewNode(
-            prompt,
+            prompt.length === 0 ? 'Merge these images' : prompt,
             selectedNodes.value.map(node => node.id),
             selectedNodes.value[0].x + Math.random() * 100,
             selectedNodes.value[0].y + Math.random() * 100
@@ -99,8 +103,11 @@ function prompt(prompt: string) {
                 <h2 class="text-2xl font-bold mb-4">Instructions</h2>
                 <ul class="list-disc pl-6 space-y-6 text-base">
                     <li>Create an unlinked idea: Enter your prompt. Press enter or click the add button. A "root" idea will generate.</li>
-                    <li>Modify an existing idea: Select an idea. Enter your prompt. Press enter or click the modify button. A "child" idea will generate. </li>
-                    <li>Merge multiple ideas: Select 2+ ideas. Enter your prompt (optional). Press enter or click the merge button. A "child" idea will generate. </li>
+                    <li>Modify an existing idea: Select an idea. Enter your prompt. Press enter or click the modify button. A "child" idea will generate.</li>
+                    <li>
+                        Merge multiple ideas: Select 2+ ideas. Enter your prompt (optional). Press enter or click the merge button. A "child" idea will
+                        generate.
+                    </li>
                 </ul>
             </div>
         </div>

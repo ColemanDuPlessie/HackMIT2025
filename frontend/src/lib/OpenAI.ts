@@ -14,7 +14,7 @@ export async function generateImage(model: string="dall-e-3", prompt?: string) {
                 size: "1024x1024"
             })
         });
-        
+
         const result = await response.json();
         return result.data[0].url;
 }

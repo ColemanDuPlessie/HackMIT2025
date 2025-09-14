@@ -77,6 +77,10 @@ onMounted(() => {
             reader.readAsDataURL(file)
         }
     })
+
+    setTimeout(() => {
+        goHome()
+    }, 1);
 })
 
 onMounted(() => {
