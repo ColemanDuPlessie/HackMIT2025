@@ -6,6 +6,7 @@ const menuVisible = ref(false)
 
 const models = {
     dummy: 'Dummy',
+    'gpt-image-1': 'GPT Image 1',
     'dall-e-3': 'Dall-E 3',
     'dall-e-2': 'Dall-E 2',
     'stable-diffusion-xl-1.0': 'Stable Diffusion XL 1.0',
