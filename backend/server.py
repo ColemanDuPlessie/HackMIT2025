@@ -92,12 +92,11 @@ while True:
                         subfolder = image['subfolder']
                         folder_type = image['type']
 
-                        data = {
-                            "id": id,
-                            "image": str(base64.b64encode(get_image(filename, subfolder, folder_type)))
-                        }
+                        image_b64 = base64.b64encode(get_image(filename, subfolder, folder_type)).decode('utf-8')
+                        payload = json.dumps({"image": image_b64, "id": id}).encode('utf-8')
 
-                        req = request.Request("https://hack-mit-2025-chi.vercel.app/api/submit", data=json.dumps(data).encode())
+                        req = request.Request("https://hack-mit-2025-chi.vercel.app/api/submit", data=payload)
+                        req.add_header('Content-Type', 'application/json')
                         response = request.urlopen(req)
 
                         print(response.read())
