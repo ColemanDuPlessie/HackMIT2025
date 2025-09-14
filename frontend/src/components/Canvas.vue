@@ -95,8 +95,7 @@ const linkedAttractionMultiplier = 3
 
 function update() {
     const now = Date.now()
-    const deltaTime = (now - lastTime) / 1000
-    // const deltaTime = 0.1
+    const deltaTime = Math.min((now - lastTime) / 1000, 0.2)
     lastTime = now
 
     for (const node of nodes.value) {

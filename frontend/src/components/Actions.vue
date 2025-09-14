@@ -28,7 +28,7 @@ let lastTime = Date.now()
 
 function update() {
     const now = Date.now()
-    const deltaTime = ((now - lastTime) / 1000) * 4
+    const deltaTime = Math.min(((now - lastTime) / 1000), 0.2) * 4
     lastTime = now
 
     const movementX = xOffset * deltaTime
