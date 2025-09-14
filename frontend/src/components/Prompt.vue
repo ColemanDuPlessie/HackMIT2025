@@ -38,7 +38,7 @@ const icon = computed(() => {
         />
 
         <button
-            class="bg-[var(--color-accent)] rounded-md flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 hover:duration-0 ease-in-out"
+            class="bg-[var(--color-accent)] rounded-lg flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 hover:duration-0 ease-in-out"
             @click="emit('prompt', prompt)"
         >
             <span class="material-symbols-outlined text-[var(--color-accent-button)] block"> {{ icon }} </span>

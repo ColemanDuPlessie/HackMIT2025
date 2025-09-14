@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Prompt from './components/Prompt.vue'
 import ModelPicker from './components/ModelPicker.vue'
+import Actions from './components/Actions.vue'
 import Canvas from './components/Canvas.vue'
 import { ref } from 'vue'
 import { addNewNode, selectedNodes, viewOffsetX, viewOffsetY } from './lib/State'
@@ -49,6 +50,7 @@ function prompt(prompt: string) {
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
         <ModelPicker />
         <Prompt class="grow" @prompt="prompt" />
+        <Actions />
     </div>
 
     <!-- Hamburger Menu -->
