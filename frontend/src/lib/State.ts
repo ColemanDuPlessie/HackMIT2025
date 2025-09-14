@@ -1,6 +1,6 @@
 import { onMounted, ref, type Ref } from 'vue'
 import { generateImage, mergeImages, modifyImage } from './OpenAI';
-import { genImg } from './unified_imggen';
+import { generateImage as generateImageLocal } from './Local';
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
 
@@ -76,9 +76,7 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 
     if (backlinks.length === 0) {
-        node.image = await generateImage(prompt)
-        
-        return
+        node.image = await generateImageLocal(prompt)
     } else if (backlinks.length == 1) {
         node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
     } else {

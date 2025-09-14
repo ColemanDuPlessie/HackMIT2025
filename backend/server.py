@@ -1,14 +1,132 @@
-from diffusers import StableDiffusionPipeline
-import torch
+import json
+import time
+from urllib import request
+from urllib import parse
+import uuid
+import random
+import base64
 
-pipe = StableDiffusionPipeline.from_pretrained("tencent/HunyuanImage-2.1")
+file = open('./workflows/slow.json')
+# file = open('./workflows/fast.json')
+fast_workflow = json.loads(file.read())
+file.close()
 
-device = "cuda" if torch.cuda.is_available() else "cpu"
-pipe = pipe.to(device)
+def queue_prompt(prompt, id):
+    p = {"prompt": prompt, "prompt_id": id}
+    data = json.dumps(p).encode('utf-8')
 
-prompt = "a cat sitting on a windowsill, oil painting style"
+    req =  request.Request("http://localhost:25567/prompt", data=data)
+    req.add_header('Content-Type', 'application/json')
+    request.urlopen(req)
 
-image = pipe(prompt).images[0]
+def get_history(id):
+    req =  request.Request("http://localhost:25567/history/" + id)
+    response = request.urlopen(req)
+    
+    return json.loads(response.read())
 
-image.save("generated_image.png")
-print("Image saved as 'generated_image.png'!")
+def get_queue():
+    req =  request.Request("http://localhost:25567/queue")
+    response = request.urlopen(req)
+    
+    return json.loads(response.read())
+
+def get_image(filename, subfolder, folder_type):
+    p = {"filename": filename, "subfolder": subfolder, "type": folder_type}
+    data = parse.urlencode(p)
+
+    req =  request.Request("http://localhost:25567/view?" + data)
+    response = request.urlopen(req)
+
+    return response.read()
+
+while True:
+    req = request.Request("https://hack-mit-2025-chi.vercel.app/api/status")
+    response = request.urlopen(req)
+
+    status = json.loads(response.read())
+
+    print(status)
+    
+    for job in status:
+        if job['type'] == 'fast':
+            id = job['id']
+            #job['prompt']
+
+            print("qeueuing job " + id)
+
+            queue_prompt(fast_workflow, id)
+
+            print("queued job " + id)
+
+            finished = False
+
+            while not finished:
+                history = get_history(id)
+
+                if not id in history:
+                    continue
+
+                job_history = history[id]
+                outputs = job_history['outputs']
+
+                for node_id in outputs:
+                    output = outputs[node_id]
+                    images = output['images']
+
+                    for image in images:
+                        filename = image['filename']
+                        subfolder = image['subfolder']
+                        folder_type = image['type']
+
+                        data = {
+                            "id": id,
+                            "image": str(base64.b64encode(get_image(filename, subfolder, folder_type)))[:10]
+                        }
+
+                        req = request.Request("https://hack-mit-2025-chi.vercel.app/api/submit", data=json.dumps(data).encode())
+                        response = request.urlopen(req)
+
+                        print(response.read())
+
+                finished = True
+
+                time.sleep(0.1)
+
+            print("finished job " + id)
+
+    time.sleep(5)
+
+fast_workflow["3"]["inputs"]["seed"] = random.randint(0, 999999)
+id = str(uuid.uuid4())
+queue_prompt(fast_workflow, id)
+
+while True:
+    history = get_history(id)
+
+    print("skipping! " + id)
+    print(history.keys())
+
+    if not id in history:
+        continue
+
+    job_history = history[id]
+    outputs = job_history['outputs']
+
+    # print(get_queue())
+    print(get_history())
+
+    for node_id in outputs:
+        output = outputs[node_id]
+        images = output['images']
+
+        for image in images:
+            filename = image['filename']
+            subfolder = image['subfolder']
+            folder_type = image['type']
+
+            file = open('./test.png', 'wb')
+            file.write(get_image(filename, subfolder, folder_type))
+            file.close()
+
+    print("\n\n")
