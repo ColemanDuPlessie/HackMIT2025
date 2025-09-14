@@ -1,7 +1,7 @@
 from diffusers import StableDiffusionPipeline
 import torch
 
-pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+pipe = StableDiffusionPipeline.from_pretrained("ByteDance/SDXL-Lightning")
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 pipe = pipe.to(device)
