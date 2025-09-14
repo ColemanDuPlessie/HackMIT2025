@@ -1,5 +1,5 @@
 import { onMounted, ref, type Ref } from 'vue'
-import { generateImage, mergeImages, modifyImage } from './OpenAI'
+import { generateImage, generateImageDalle2, generateImageDalle3, mergeImages, modifyImage } from './OpenAI'
 import { generateImage as generateImageLocal } from './Local'
 
 export type Node = { x: number; y: number; image: string; id: string; backlinks: string[]; pointsTo: string[] }
@@ -81,6 +81,10 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     if (backlinks.length === 0) {
         if (selectedModel.value === 'sdxl-lightning') {
             node.image = await generateImageLocal(prompt)
+        } else if (selectedModel.value === 'dall-e-3') {
+            node.image = await generateImageDalle3(prompt)
+        } else if (selectedModel.value === 'dall-e-2') {
+            node.image = await generateImageDalle2(prompt)
         } else if (selectedModel.value === 'dummy') {
             node.image = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
         } else {
