@@ -1,4 +1,4 @@
-export async function generateImage(model: string="dall-e-3", prompt?: string) {
+export async function generateImage(prompt?: string) {
     // return 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQykzoZeCE0p7LeuyHnLYCdPP2jju9d5PaMeA&s'
 
     const response = await fetch('https://api.openai.com/v1/images/generations', {
@@ -8,7 +8,7 @@ export async function generateImage(model: string="dall-e-3", prompt?: string) {
                 'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_KEY}`
             },
             body: JSON.stringify({
-                model: model,
+                model: 'gpt-image-1',
                 prompt: prompt ?? 'A cute baby sea otter',
                 n: 1,
                 size: "1024x1024"

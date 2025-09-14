@@ -76,17 +76,11 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 
     if (backlinks.length === 0) {
-        node.image = await generateImage(selectedModel.value, prompt)
+        node.image = await generateImage(prompt)
         
         return
     } else if (backlinks.length == 1) {
-        if (selectedModel.value === "Qwen-Image-Edit") {
-            console.log("Editing image based on backlink image");
-            // Use the backlink image to modify
-            node.image = await genImg(selectedModel.value, prompt, nodeLookup[backlinks[0]].image)
-        } else {
-            node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
-        }
+        node.image = await modifyImage(nodeLookup[backlinks[0]].image, prompt)
     } else {
         node.image = await mergeImages(backlinks.map(backlink => nodeLookup[backlink].image), prompt)
     }
