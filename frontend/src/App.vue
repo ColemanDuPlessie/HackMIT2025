@@ -69,10 +69,13 @@ function prompt(prompt: string) {
 
     <!-- Hamburger Menu -->
     <div class="fixed top-4 right-4 z-50">
-        <button @click="showMenu = !showMenu" class="flex flex-col justify-center items-center w-10 h-10 bg-slate-800 rounded shadow-lg focus:outline-none">
-            <span class="block w-6 h-0.5 bg-white mb-1 transition-all duration-300" :class="showMenu ? 'rotate-45 translate-y-2' : ''"></span>
-            <span class="block w-6 h-0.5 bg-white mb-1 transition-all duration-300" :class="showMenu ? 'opacity-0' : ''"></span>
-            <span class="block w-6 h-0.5 bg-white transition-all duration-300" :class="showMenu ? '-rotate-45 -translate-y-2' : ''"></span>
+        <button
+            @click="showMenu = !showMenu"
+            class="flex flex-col justify-center items-center w-10 h-10 bg-[var(--color-element)] text-[var(--color-text-alt)] rounded shadow-lg focus:outline-none"
+        >
+            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300" :class="showMenu ? 'rotate-45 translate-y-2' : ''"></span>
+            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] mb-1 transition-all duration-300" :class="showMenu ? 'opacity-0' : ''"></span>
+            <span class="block w-6 h-0.5 bg-[var(--color-text-alt)] transition-all duration-300" :class="showMenu ? '-rotate-45 -translate-y-2' : ''"></span>
         </button>
         <transition name="fade-slide">
             <div v-if="showMenu" class="absolute mt-2 right-0 bg-black text-white rounded shadow-lg min-w-[160px] p-4">
