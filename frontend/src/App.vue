@@ -71,7 +71,7 @@ function prompt(prompt: string) {
     <div class="absolute left-0 bottom-0 flex w-full pb-4 px-8 gap-8">
         <ModelPicker />
         <Prompt class="grow" @prompt="prompt" />
-        <Speech @transcriptUpdate="prompt" /> <!-- 👈 speech input -->
+        <Speech @transcriptUpdate="prompt" />
         <Actions />
     </div>
 
@@ -109,6 +109,7 @@ function prompt(prompt: string) {
                         Merge multiple ideas: Select 2+ ideas. Enter your prompt (optional). Press enter or click the merge button. A "child" idea will
                         generate.
                     </li>
+                    <li>To enter a prompt using your voice, hit the speak button and say your prompt, then hit the stop button once you are down with you current prompt</li>
                 </ul>
             </div>
         </div>
