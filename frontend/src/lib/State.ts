@@ -37,6 +37,8 @@ export function isNodeSelected(node: Node) {
 export function selectNode(node: Node) {
     if(isNodeSelected(node)) return
 
+    if(selectedNodes.value.length === 16) return
+
     selectedNodes.value.push(node)
     selectedNodes.value = [...selectedNodes.value]
 }
