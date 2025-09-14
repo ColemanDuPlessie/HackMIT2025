@@ -112,6 +112,12 @@ function prompt(prompt: string) {
             </div>
         </div>
     </transition>
+
+    <!-- BONSAI Header -->
+    <div class="fixed top-0 left-0 p-4 z-50">
+        <span class="font-bold text-white text-xl" style="font-size:48px">BONSAI</span> <!-- TODO font size??? -->>
+    </div>
+    <!-- End BONSAI Header -->
 </template>
 
 <style scoped>
