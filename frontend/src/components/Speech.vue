@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 
-const emit = defineEmits(['update'])
+const emit = defineEmits(['update', 'prompt'])
 
 const listening = ref(false)
 
@@ -26,7 +26,11 @@ onMounted(() => {
     speechRecognition.interimResults = true
     speechRecognition.lang = 'en-US'
 
+    let lastEventId = Math.random()
+
     speechRecognition.onresult = event => {
+        lastEventId = Math.random()
+
         let text = ''
 
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -34,6 +38,18 @@ onMounted(() => {
         }
 
         emit('update', text.trim())
+
+        const targetId = lastEventId
+
+        setTimeout(() => {
+            if (lastEventId !== targetId) return
+
+            if (!listening.value) return
+
+            toggle()
+
+            emit('prompt')
+        }, 1000)
     }
 })
 </script>

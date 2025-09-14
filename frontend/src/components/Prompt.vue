@@ -11,7 +11,7 @@ const prompt = ref('')
 function keydown(event: KeyboardEvent) {
     if (event.key !== 'Enter') return
 
-    emit('prompt', prompt.value)
+    submit()
 }
 
 const placeholder = computed(() => {
@@ -28,6 +28,12 @@ const icon = computed(() => {
     return 'add'
 })
 
+function submit() {
+    emit('prompt', prompt.value)
+
+    prompt.value = ''
+}
+
 //@ts-ignore
 const supportsSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 </script>
@@ -42,11 +48,11 @@ const supportsSpeechRecognition = window.SpeechRecognition || window.webkitSpeec
             @keydown="keydown"
         />
 
-        <Speech v-if="supportsSpeechRecognition" @update="text => (prompt = text)" />
+        <Speech v-if="supportsSpeechRecognition" @update="text => (prompt = text)" @prompt="submit" />
 
         <button
-            class="bg-[var(--color-accent)] rounded-lg flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 hover:duration-0 ease-in-out"
-            @click="emit('prompt', prompt)"
+            class="bg-[var(--color-accent)] rounded-lg flex items-center justify-center px-2 py-1 m-1 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 hover:duration-0 ease-in-out"
+            @click="submit"
         >
             <span class="material-symbols-outlined text-[var(--color-accent-button)] block"> {{ icon }} </span>
         </button>
