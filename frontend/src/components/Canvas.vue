@@ -43,13 +43,13 @@ function render() {
                 )
 
                 ctx.lineTo(
-                    node.x + diffX / 2 - (diffY * 10) / diffDist + viewOffsetX.value + 50,
-                    node.y + diffY / 2 + (diffX * 10) / diffDist + viewOffsetY.value + 50
+                    node.x + diffX / 2 - (diffY * 8) / diffDist + viewOffsetX.value + 50,
+                    node.y + diffY / 2 + (diffX * 8) / diffDist + viewOffsetY.value + 50
                 )
 
                 ctx.lineTo(
-                    node.x + diffX * 0.5 + (diffY * 10) / diffDist + viewOffsetX.value + 50,
-                    node.y + diffY / 2 - (diffX * 10) / diffDist + viewOffsetY.value + 50
+                    node.x + diffX * 0.5 + (diffY * 8) / diffDist + viewOffsetX.value + 50,
+                    node.y + diffY / 2 - (diffX * 8) / diffDist + viewOffsetY.value + 50
                 )
                 ctx.closePath()
                 ctx.fill()
