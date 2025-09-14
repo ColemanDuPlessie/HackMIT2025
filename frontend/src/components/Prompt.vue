@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import Speech from './Speech.vue'
+
 import { computed, ref } from 'vue'
 import { selectedNodes } from '../lib/State'
 
@@ -25,6 +27,9 @@ const icon = computed(() => {
 
     return 'add'
 })
+
+//@ts-ignore
+const supportsSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 </script>
 
 <template>
@@ -36,6 +41,8 @@ const icon = computed(() => {
             class="min-w-0 placeholder:text-[var(--color-text-alt)] outline-none border-none px-4 py-3.5 grow h-full"
             @keydown="keydown"
         />
+
+        <Speech v-if="supportsSpeechRecognition" @update="text => (prompt = text)" />
 
         <button
             class="bg-[var(--color-accent)] rounded-lg flex items-center justify-center w-8 m-2 cursor-pointer hover:bg-[var(--color-accent-hover)] transition-all duration-100 hover:duration-0 ease-in-out"
