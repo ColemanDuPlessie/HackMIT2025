@@ -5,6 +5,8 @@ from urllib import parse
 import uuid
 import random
 import base64
+from io import BytesIO
+from PIL import Image
 
 file = open('./workflows/slow.json')
 # file = open('./workflows/fast.json')
@@ -37,8 +39,19 @@ def get_image(filename, subfolder, folder_type):
 
     req =  request.Request("http://localhost:25567/view?" + data)
     response = request.urlopen(req)
+    img_bytes = response.read()
 
-    return response.read()
+    # Compress image using Pillow
+    try:
+        img = Image.open(BytesIO(img_bytes))
+        buf = BytesIO()
+        img = img.convert("RGB")
+        img.save(buf, format="JPEG", quality=30)  # Lower quality for compression
+        compressed_bytes = buf.getvalue()
+        return compressed_bytes
+    except Exception as e:
+        # If not an image, return original bytes
+        return img_bytes
 
 while True:
     req = request.Request("https://hack-mit-2025-chi.vercel.app/api/status")
@@ -81,7 +94,7 @@ while True:
 
                         data = {
                             "id": id,
-                            "image": str(base64.b64encode(get_image(filename, subfolder, folder_type)))[:10]
+                            "image": str(base64.b64encode(get_image(filename, subfolder, folder_type)))
                         }
 
                         req = request.Request("https://hack-mit-2025-chi.vercel.app/api/submit", data=json.dumps(data).encode())
