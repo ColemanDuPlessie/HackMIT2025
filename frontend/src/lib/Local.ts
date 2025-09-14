@@ -1,9 +1,12 @@
 export async function generateImage(prompt?: string) {
     const id = await (await fetch('https://hack-mit-2025-chi.vercel.app/api/request', {
         method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
             type: 'fast',
-            prompt: 'World',
+            prompt: prompt ?? 'The edge of the universe',
         })
     })).text();
 
@@ -20,8 +23,6 @@ export async function generateImage(prompt?: string) {
         }
 
         const image = await (result).text();
-
-        console.log(image)
 
         return 'data:image/png;base64, ' + image
     }

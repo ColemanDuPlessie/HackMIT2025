@@ -13,7 +13,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  const { type = 'fast', prompt = 'World' } = req.body
+  const { type, prompt } = req.body
   
   const id = Math.random().toString()
 

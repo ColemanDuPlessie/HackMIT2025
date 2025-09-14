@@ -8,9 +8,8 @@ import base64
 from io import BytesIO
 from PIL import Image
 
-file = open('./workflows/slow.json')
-# file = open('./workflows/fast.json')
-fast_workflow = json.loads(file.read())
+file = open('./workflows/fast.json')
+fast_workflow = file.read()
 file.close()
 
 def queue_prompt(prompt, id):
@@ -53,8 +52,11 @@ def get_image(filename, subfolder, folder_type):
         # If not an image, return original bytes
         return img_bytes
 
+api_base = "https://hack-mit-2025-chi.vercel.app"
+# api_base = "http://127.0.0.1:3000"
+
 while True:
-    req = request.Request("https://hack-mit-2025-chi.vercel.app/api/status")
+    req = request.Request(api_base + "/api/status")
     response = request.urlopen(req)
 
     status = json.loads(response.read())
@@ -64,11 +66,13 @@ while True:
     for job in status:
         if job['type'] == 'fast':
             id = job['id']
-            #job['prompt']
+            prompt = job['prompt']
 
-            print("qeueuing job " + id)
+            print("qeueuing job " + id + " " + prompt)
 
-            queue_prompt(fast_workflow, id)
+            applied_prompt = fast_workflow.replace("$prompt", prompt)
+
+            queue_prompt(json.loads(applied_prompt), id)
 
             print("queued job " + id)
 
@@ -95,7 +99,7 @@ while True:
                         image_b64 = base64.b64encode(get_image(filename, subfolder, folder_type)).decode('utf-8')
                         payload = json.dumps({"image": image_b64, "id": id}).encode('utf-8')
 
-                        req = request.Request("https://hack-mit-2025-chi.vercel.app/api/submit", data=payload)
+                        req = request.Request(api_base + "/api/submit", data=payload)
                         req.add_header('Content-Type', 'application/json')
                         response = request.urlopen(req)
 
