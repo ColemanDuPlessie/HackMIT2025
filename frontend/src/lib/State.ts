@@ -91,6 +91,27 @@ export async function addNewNode(prompt: string, backlinks: string[], locationX:
     }
 }
 
+export function deleteNode(node: Node) {
+    delete nodeLookup[node.id]
+
+    for(const otherNode of nodes.value) {
+        if(otherNode.backlinks.includes(otherNode.id)) otherNode.backlinks.splice(otherNode.backlinks.indexOf(otherNode.id, 1))
+        if(otherNode.pointsTo.includes(otherNode.id)) otherNode.pointsTo.splice(otherNode.pointsTo.indexOf(otherNode.id, 1))
+    }
+
+    nodes.value.splice(nodes.value.findIndex(otherNode => otherNode.id === node.id), 1)
+
+    if(isNodeSelected(node)) deselectNode(node)
+}
+
+export function deleteSelectedNodes() {
+    const nodesToDelete = [...selectedNodes.value]
+
+    for(const node of nodesToDelete) {
+        deleteNode(node)
+    }
+}
+
 export const viewOffsetX = ref(0)
 export const viewOffsetY = ref(0)
 

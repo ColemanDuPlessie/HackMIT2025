@@ -51,6 +51,8 @@ function prompt(prompt: string) {
             selectedNodes.value[0].y + Math.random() * 100
         )
     }
+
+    selectedNodes.value = []
 }
 </script>
 
